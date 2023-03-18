@@ -5,42 +5,41 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/jackc/pgx/v4"
+	"io/ioutil"
 )
 
-const (
-	host     = ""
-	port     = ""
-	user     = ""
-	password = ""
-	dbname   = ""
-	ca       = "/postgresql/root.crt"
+var (
+	host     = getEnvVar("host")
+	port     = getEnvVar("port")
+	user     = getEnvVar("dbuser")
+	password = getEnvVar("dbpass")
+	dbname   = getEnvVar("dbname")
+	ca       = getEnvVar("ca")
 )
 
-func connect() {
+var conn *pgx.Conn
 
+func dbconnect() error {
+
+	// Штука для подключения сертификата SSL
 	rootCertPool := x509.NewCertPool()
 	pem, err := ioutil.ReadFile(ca)
 	if err != nil {
 		panic(err)
 	}
-
 	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
 		panic("Failed to append PEM.")
 	}
 
 	connstring := fmt.Sprintf(
-		"host=%s port=%d dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
+		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
 		host, port, dbname, user, password)
 
 	connConfig, err := pgx.ParseConfig(connstring)
-
 	if err != nil {
 		fmt.Printf("Unable to parse config: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	connConfig.TLSConfig = &tls.Config{
@@ -48,21 +47,11 @@ func connect() {
 		InsecureSkipVerify: true,
 	}
 
-	conn, err := pgx.ConnectConfig(context.Background(), connConfig)
+	conn, err = pgx.ConnectConfig(context.Background(), connConfig)
 	if err != nil {
 		fmt.Printf("Unable to connect to database: %v\n", err)
-		os.Exit(1)
+
+		return err
 	}
-
-	defer conn.Close(context.Background())
-
-	var version string
-
-	err = conn.QueryRow(context.Background(), "select version()").Scan(&version)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(version)
+	return err
 }
