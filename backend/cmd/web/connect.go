@@ -20,7 +20,7 @@ var (
 
 var conn *pgx.Conn
 
-func dbconnect() error {
+func dbConnect() error {
 
 	// Штука для подключения сертификата SSL
 	rootCertPool := x509.NewCertPool()
@@ -32,11 +32,11 @@ func dbconnect() error {
 		panic("Failed to append PEM.")
 	}
 
-	connstring := fmt.Sprintf(
+	connString := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
 		host, port, dbname, user, password)
 
-	connConfig, err := pgx.ParseConfig(connstring)
+	connConfig, err := pgx.ParseConfig(connString)
 	if err != nil {
 		fmt.Printf("Unable to parse config: %v\n", err)
 		return err

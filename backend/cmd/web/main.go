@@ -16,7 +16,7 @@ func getEnvVar(key string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return string(os.Getenv(key))
+	return os.Getenv(key)
 }
 
 func main() {
@@ -28,11 +28,10 @@ func main() {
 		}
 	}(conn, context.Background())
 
-	err := dbconnect()
+	err := dbConnect()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
