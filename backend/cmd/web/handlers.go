@@ -26,29 +26,63 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleThemes(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/themes" {
+func handleThemesMenu(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/themes/menu" {
 		http.NotFound(w, r)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	themesQuery := "SELECT * FROM theme"
-	rows, err := conn.Query(context.Background(), themesQuery)
+	query := `SELECT t.id, t.title, t.position,
+		a.id, a.title, a.description, a.position, a.theme_id
+		FROM algorithm AS a
+		JOIN theme AS t ON a.theme_id=t.id`
+
+	rows, err := conn.Query(context.Background(), query)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 		return
 	}
 
-	themes := make([]theme, 0)
+	themes := make(map[theme][]algorithm)
 	for rows.Next() {
 		theme := theme{}
-		err := rows.Scan(&theme.Id, &theme.Title)
-		if err == nil {
-			themes = append(themes, theme)
+		algo := algorithm{}
+		err := rows.Scan(
+			&theme.Id, &theme.Title, &theme.Position,
+			&algo.Id, &algo.Title, &algo.Description, &algo.Position, &algo.ThemeId,
+		)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			_, found := themes[theme]
+			if !found {
+				themes[theme] = make([]algorithm, 1)
+				themes[theme][0] = algo
+			} else {
+				themes[theme] = append(themes[theme], algo)
+			}
 		}
 	}
-	json.NewEncoder(w).Encode(themes)
+
+	themeMenus := make([]themeMenu, 0)
+	for theme, algo := range themes {
+		elem := themeMenu{
+			Id:         theme.Id,
+			Title:      theme.Title,
+			Position:   theme.Position,
+			Algorithms: algo,
+		}
+		themeMenus = append(themeMenus, elem)
+	}
+	jsonStr, jsonErr := json.Marshal(themeMenus)
+	if jsonErr != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", jsonErr)
+	}
+	_, writeErr := w.Write(jsonStr)
+	if writeErr != nil {
+		log.Fatal(writeErr)
+	}
 }
 
 func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
