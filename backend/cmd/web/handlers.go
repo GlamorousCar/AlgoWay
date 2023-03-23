@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -47,4 +49,26 @@ func handleThemes(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	json.NewEncoder(w).Encode(themes)
+}
+
+func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	var res = algorithmTheory{}
+	err = conn.QueryRow(context.Background(), "SELECT id,content FROM theory WHERE algorithm_id=$1", id).Scan(&res.ID, &res.Content)
+	if res.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	jsonResp, err := json.Marshal(res)
+
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+
+	w.Write(jsonResp)
 }
