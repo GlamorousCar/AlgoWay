@@ -53,7 +53,6 @@ func handleThemes(w http.ResponseWriter, r *http.Request) {
 
 func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	//conn.QueryRow('SELECT ?')
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
