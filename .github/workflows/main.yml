@@ -1,14 +1,16 @@
-
 name: CI
 
 on:
   workflow_dispatch:
-
+    inputs:
+          myInput:
+            description: 'User Input:'
+            required: true
+            default: "Hello World"
 env:
   ca: "~/.postgresql/root.crt"
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
