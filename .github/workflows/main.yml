@@ -23,7 +23,7 @@ jobs:
         go-version: 1.20
     - name: Install dependencies
       run: |
-          go get backend/go.mod
+          go get github.com/GlamorousCar/AlgoWay/blob/main/backend/go.mod
           go get github.com/jackc/pgx/v4
           go get github.com/joho/godotenv
     - name: Build
