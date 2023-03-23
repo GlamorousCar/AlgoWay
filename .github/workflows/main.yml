@@ -17,8 +17,9 @@ jobs:
     - uses: actions/checkout@v3
     - name: Download CA
       run: mkdir --parents ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
-
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
         go-version: 1.20
+    - name: Build
+      run: go build -v ./...
