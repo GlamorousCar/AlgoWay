@@ -3,11 +3,10 @@ package main
 import (
 	"context"
 	"github.com/jackc/pgx/v4"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func getEnvVar(key string) string {
@@ -35,9 +34,9 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
+	mux.HandleFunc("/themes", handleThemes)
 
 	log.Println("Запуск сервера на http://127.0.0.1:4000")
 	err = http.ListenAndServe(":4000", mux)
 	log.Fatal(err)
-
 }
