@@ -25,5 +25,8 @@ jobs:
       run: |
           go get github.com/jackc/pgx/v4
           go get github.com/joho/godotenv
+      env:
+        GOPATH: /home/runner/work/AlgoWay/backend
+
     - name: Build
       run: go build -v ./...
