@@ -34,7 +34,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
-	mux.HandleFunc("/themes", handleThemes)
+	mux.HandleFunc("/themes/menu", getThemesMenu)
 	mux.HandleFunc("/theory", getAlgorithmTheory)
 
 	log.Println("Запуск сервера на http://127.0.0.1:4000")
