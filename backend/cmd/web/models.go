@@ -25,3 +25,11 @@ type algorithmTheory struct {
 	ID      int    `json:"id"`
 	Content string `json:"content"`
 }
+
+type task struct {
+	Id          int    `json:"id"`
+	AlgorithmId int    `json:"-"`
+	IsSolved    bool   `json:"is_solved"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+}
