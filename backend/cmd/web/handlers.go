@@ -10,6 +10,8 @@ import (
 	"strconv"
 )
 
+const algorithmId = "id"
+
 func home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
@@ -87,7 +89,7 @@ func getThemesMenu(w http.ResponseWriter, r *http.Request) {
 
 func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.URL.Query().Get(algorithmId))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
 		return
@@ -105,4 +107,47 @@ func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(jsonResp)
+}
+
+func getAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/task" {
+		http.NotFound(w, r)
+		return
+	}
+	rawId := r.URL.Query().Get(algorithmId)
+	algoId, err := strconv.Atoi(rawId)
+	if err != nil || algoId < 1 {
+		http.NotFound(w, r)
+		return
+	}
+
+	query := `SELECT id, is_solved, title, content 
+			FROM task 
+			WHERE algorithm_id=$1`
+	rows, queryErr := conn.Query(context.Background(), query, algoId)
+
+	algoTasks := make([]task, 0, 10)
+	for rows.Next() {
+		algoTask := task{}
+		scanErr := rows.Scan(
+			&algoTask.Id,
+			&algoTask.IsSolved,
+			&algoTask.Title,
+			&algoTask.Content,
+		)
+		if scanErr == nil {
+			algoTasks = append(algoTasks, algoTask)
+		}
+	}
+
+	if queryErr != nil {
+		log.Fatal(queryErr)
+	}
+
+	jsonStr, jsonErr := json.Marshal(algoTasks)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	w.Write(jsonStr)
 }
