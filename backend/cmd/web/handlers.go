@@ -62,13 +62,22 @@ func getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	err = conn.QueryRow(context.Background(), "SELECT id,content FROM theory WHERE algorithm_id=$1", id).Scan(&res.ID, &res.Content)
 	if res.ID == 0 {
 		w.WriteHeader(http.StatusNotFound)
+		errorObj := map[string]string{"error": "Запись не найдена"}
+		responseBody, err := json.Marshal(errorObj)
+		if err != nil {
+			// Если произошла ошибка при кодировании JSON-объекта,
+			// отправьте ответ с кодом ошибки сервера
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		_, _ = w.Write(responseBody)
 		return
 	}
-	jsonResp, err := json.Marshal(res)
 
+	jsonResp, err := json.Marshal(res)
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
+	_, _ = w.Write(jsonResp)
 
-	w.Write(jsonResp)
 }

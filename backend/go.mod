@@ -1,4 +1,4 @@
-module project/env
+module main
 
 go 1.20
 
