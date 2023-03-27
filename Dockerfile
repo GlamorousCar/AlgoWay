@@ -41,7 +41,6 @@ RUN echo dbport=$DBPORT >> .env
 RUN echo ca=.postgresql/root.crt >> .env
 
 
-RUN cat .env
 
 
 #COPY backend/.env .
