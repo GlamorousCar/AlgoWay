@@ -1,0 +1,40 @@
+name: Docker Build
+
+on:
+  workflow_dispatch:
+    inputs:
+          myInput:
+            description: 'User Input:'
+            required: true
+            default: "Hello World"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DBNAME: ${{ secrets.DBNAME }}
+      DBUSER: ${{ secrets.DBUSER }}
+      DBPASS: ${{ secrets.DBPASS }}
+      HOST: ${{ secrets.HOST }}
+      PORT: ${{ secrets.PORT }}
+
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        ref: cicd
+
+    - name: Yandex Cloud CR "Login" Action for GitHub Actions
+      uses: yc-actions/yc-cr-login@v0.1-alpha
+      with:
+        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+    - name: Build, tag, and push image to Yandex Cloud Container Registry
+      env:
+        CR_REGISTRY: crp944733ntsfvcd59pb
+        CR_REPO: yc-cr-github-action
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build --build-arg DBUSER=$DBUSER --build-arg DBNAME=$DBNAME --build-arg HOST=$HOST --build-arg PORT=$PORT --build-arg DBPASS=$DBPASS -t cr.yandex/$CR_REGISTRY/app:hello .
+        
+        docker push cr.yandex/$CR_REGISTRY/app:hello

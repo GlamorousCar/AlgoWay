@@ -19,21 +19,28 @@ RUN go build -o app .
 
 # Set the entry point of the container to the web binary
 
+
 FROM alpine:latest
+
+ARG DBUSER
+ARG DBNAME
+ARG HOST
+ARG PORT
+ARG DBPASS
+
 WORKDIR /app
 COPY --from=gobuild /AlgoWay/backend/cmd/web/app .
-RUN touch /backend/.env
-RUN ECHO dbuser=${{ secrets.DBUSER }} > /backend/.env
-RUN ECHO dbname=${{ secrets.DBNAME }} > /backend/.env
-RUN ECHO host=${{ secrets.HOST }} > /backend/.env
-RUN ECHO port=${{ secrets.PORT }} > /backend/.env
-RUN ECHO dbpass=${{ secrets.DBPASS }} > /backend/.env
-RUN ECHO ca=.postgresql/root.crt > /backend/.env
 
 
+RUN touch .env
+RUN echo dbuser=$DBUSER > .env
+RUN echo dbname=$DBNAME >> .env
+RUN echo host=$HOST >> .env
+RUN echo port=$PORT >> .env
+RUN echo dbpass=$DBPASS >> .env
+RUN echo ca=.postgresql/root.crt >> .env
 
-
-COPY backend/.env .
+#COPY backend/.env .
 RUN mkdir .postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document .postgresql/root.crt && chmod 0600 .postgresql/root.crt
 
 #RUN #chmod a+x /app
