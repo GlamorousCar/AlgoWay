@@ -3,10 +3,10 @@ name: Docker Build
 on:
   workflow_dispatch:
     inputs:
-          myInput:
-            description: 'User Input:'
-            required: true
-            default: "Hello World"
+      myInput:
+        description: 'User Input:'
+        required: true
+        default: "Hello World"
 
 jobs:
   build:
@@ -16,25 +16,35 @@ jobs:
       DBUSER: ${{ secrets.DBUSER }}
       DBPASS: ${{ secrets.DBPASS }}
       HOST: ${{ secrets.HOST }}
-      PORT: ${{ secrets.PORT }}
-
-
+      DBPORT: ${{ secrets.DBPORT }}
+      CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+      CR_REPO: app
+      IMAGE_TAG: ${{ github.sha }}
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
       with:
-        ref: cicd
-
+        ref: main
     - name: Yandex Cloud CR "Login" Action for GitHub Actions
       uses: yc-actions/yc-cr-login@v0.1-alpha
       with:
         yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
     - name: Build, tag, and push image to Yandex Cloud Container Registry
-      env:
-        CR_REGISTRY: crp944733ntsfvcd59pb
-        CR_REPO: yc-cr-github-action
-        IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build --build-arg DBUSER=$DBUSER --build-arg DBNAME=$DBNAME --build-arg HOST=$HOST --build-arg PORT=$PORT --build-arg DBPASS=$DBPASS -t cr.yandex/$CR_REGISTRY/app:hello .
-        
-        docker push cr.yandex/$CR_REGISTRY/app:hello
+        docker build --platform=linux/amd64 --pull --rm -f "Dockerfile" --build-arg DBUSER=$DBUSER --build-arg DBNAME=$DBNAME --build-arg HOST=$HOST --build-arg DBPORT=$DBPORT --build-arg DBPASS=$DBPASS -t app:latest "." 
+        docker tag app cr.yandex/$CR_REGISTRY/app:latest
+        docker push cr.yandex/$CR_REGISTRY/app:latest
+
+    - name: YC Serverless Container Deploy
+      uses: yc-actions/yc-sls-container-deploy@v2
+      with:
+        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+        folder-id: ${{ secrets.FOLDER_ID }}
+        container-name: mainapp
+        revision-service-account-id: ${{ secrets.SERVICE_ACCOUNT_ID }}
+        revision-cores: 1
+        revision-memory: 128Mb
+        revision-core-fraction: 5
+        revision-concurrency: 8
+        revision-image-url: cr.yandex/${{ secrets.CR_REGISTRY }}/app:latest
+        revision-execution-timeout: 10

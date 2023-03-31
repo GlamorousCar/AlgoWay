@@ -11,7 +11,7 @@ import (
 
 var (
 	host     = getEnvVar("host")
-	port     = getEnvVar("port")
+	dbport   = getEnvVar("dbport")
 	user     = getEnvVar("dbuser")
 	password = getEnvVar("dbpass")
 	dbname   = getEnvVar("dbname")
@@ -34,7 +34,7 @@ func dbConnect() error {
 
 	connString := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
-		host, port, dbname, user, password)
+		host, dbport, dbname, user, password)
 
 	connConfig, err := pgx.ParseConfig(connString)
 	if err != nil {

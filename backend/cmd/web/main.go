@@ -38,7 +38,19 @@ func main() {
 	mux.HandleFunc("/theory", getAlgorithmTheory)
 	mux.HandleFunc("/task", getAlgorithmTasks)
 
-	log.Println("Запуск сервера на http://127.0.0.1:4000")
-	err = http.ListenAndServe(":4000", mux)
+	port := os.Getenv("PORT")
+
+	// Проверка, что переменная окружения была найдена
+	if port == "" {
+		log.Println("Переменная окружения PORT не установлена")
+		log.Println("Пробую запуститься на 4000 порту")
+		err = http.ListenAndServe(":4000", mux)
+	} else {
+		log.Println("PORT:", port)
+		err = http.ListenAndServe(":"+port, mux)
+	}
+
+	log.Println("Запуск сервера на http://127.0.0.1")
+
 	log.Fatal(err)
 }
