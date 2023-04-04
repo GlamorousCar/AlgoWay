@@ -1,0 +1,23 @@
+@import "../../App";
+
+input{
+  padding: 0px 10px;
+
+  width: 450px;
+  height: 40px;
+
+  /* White */
+
+  border: 0.732143px solid #F6F6F8;
+  border-radius: 5px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  background-color: $dark-grey-color;
+  border: 0.732143px solid #F6F6F8;
+  border-radius: 5px;
+}

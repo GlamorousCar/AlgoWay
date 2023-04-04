@@ -1,0 +1,77 @@
+@import "../../App";
+
+.container {
+  padding: 30px 30px 20px 50px;
+  height: 890px;
+  .theory-title{
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  .nav-switch {
+    display: flex;
+    padding-left: 0;
+
+    .theory {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 8px;
+
+      width: 120px;
+      height: 56px;
+
+      box-shadow: inset 0px -2px 0px #00E861;
+
+
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .practice {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0px 4px 0px 0px;
+      gap: 8px;
+
+      width: 131px;
+      height: 56px;
+      color: $no-active-color;
+      box-shadow: inset 0px -1px 1px $no-active-color;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    gap: 30px;
+
+    height: 700px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+    .bold {
+      color: $white-color-selected;
+    }
+
+    h6 {
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
+}
+
+.container::-webkit-scrollbar {
+  width: 0;
+}

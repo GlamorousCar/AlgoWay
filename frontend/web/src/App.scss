@@ -1,0 +1,25 @@
+$font-stack: Inter, sans-serif;
+$dark-grey-color: #001518;
+$main-green-color : #00E861;
+$main-white-color : #FFFFFF;
+$white-color-selected : #F6F6F8;
+$no-active-color :rgba(246, 246, 248, 0.4);
+$scroll-color:rgba(0, 21, 24, 0.5);
+
+
+.App{
+  font-family: $font-stack ;
+  margin: 0;
+  padding-top: 50px;
+  padding-left: 23%;
+  background-color: $dark-grey-color;
+  color: $main-white-color;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  align-items: center;
+  .main{
+    display:flex;
+  }
+}
