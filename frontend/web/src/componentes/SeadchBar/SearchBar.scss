@@ -1,18 +1,17 @@
 @import "../../App";
 
 input{
-  padding: 0px 10px;
+  padding: 0 10px;
 
   width: 450px;
   height: 40px;
-  border: 0.732143px solid $white-color-selected;
   border-radius: 5px;
   flex: none;
   order: 0;
   align-self: stretch;
   flex-grow: 0;
   background-color: $dark-grey-color;
-  border: 0.732143px solid $white-color-selected;
+  border: 0.732143px solid $white-color-selected ;
   border-radius: 5px;
   color: $white-color-selected;
 }

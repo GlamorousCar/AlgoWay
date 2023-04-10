@@ -11,7 +11,7 @@ $scroll-color:rgba(0, 21, 24, 0.5);
   font-family: $font-stack ;
   margin: 0;
   padding-top: 50px;
-  padding-left: 23%;
+  padding-left: 18%;
   background-color: $dark-grey-color;
   color: $main-white-color;
   font-style: normal;
@@ -19,6 +19,7 @@ $scroll-color:rgba(0, 21, 24, 0.5);
   font-size: 20px;
   line-height: 24px;
   align-items: center;
+  min-height: 95%;
   .main{
     display:flex;
   }

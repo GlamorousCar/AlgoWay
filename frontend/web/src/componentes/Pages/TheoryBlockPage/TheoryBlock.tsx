@@ -1,7 +1,7 @@
 import * as React from "react"
 import './TheoryBlock.scss'
-import green_book from "../../images/Vector_book_green.svg";
-import grey_code from "../../images/Vector_code_default.svg"
+import green_book from "../../../images/Vector_book_green.svg";
+import grey_code from "../../../images/Vector_code_default.svg"
 const TheoryBlock = ()=>{
     return(
         <div className={"theory"}>
