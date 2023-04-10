@@ -1,34 +1,49 @@
 @import '../../../App';
 
-.content{
-  display:flex;
-  font-style: normal;
-  font-weight: 400;
+.profile-block {
+  width: 90%;
 
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0;
-  gap: 10px;
-  .name{
-    margin: 0;
-    font-size: 20px;
-    line-height: 20px;
-    padding:5px;
+  .content {
     display: flex;
+    font-style: normal;
+    font-weight: 400;
+
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    text-align: center;
-    letter-spacing: -0.01em;
-  }
-  .email{
-    margin: 0;
-    padding:5px;
-    font-size: 15px;
-    line-height: 15px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    letter-spacing: -0.01em;
-    color: $no-active-color;
+    gap: 10px;
+    padding: 0;
+
+    .info-block {
+      margin-left: 5%;
+
+      .name {
+        margin: 0;
+        font-size: 20px;
+        line-height: 20px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        letter-spacing: -0.01em;
+      }
+
+      .email {
+        margin: 0;
+        padding: 5px;
+        font-size: 15px;
+        line-height: 15px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        letter-spacing: -0.01em;
+        color: $no-active-color;
+      }
+    }
+
+    .show-more-block {
+      margin-left: 5%;
+    }
+
   }
 }

@@ -1,0 +1,34 @@
+@import '../../../App';
+
+.main-page{
+  background-color: $dark-grey-color;
+  padding: 30px 30px 20px 50px;
+  height: 890px;
+  .main-page-title{
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 77px;
+    display: flex;
+    align-items: center;
+    color: $main-white-color;
+  }
+ .main-page-content{
+   display:flex;
+   .main-page-content-description{
+     width:520px;
+
+     .main-content-button{
+       display: flex;
+       flex-direction: row;
+       justify-content: center;
+       align-items: center;
+       padding: 5px 20px;
+       gap: 8px;
+       width: 266px;
+       height: 50px;
+       background:$main-green-color;
+       border-radius: 5px;
+     }
+   }
+ }
+}
