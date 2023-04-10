@@ -1,4 +1,4 @@
-module main
+module github.com/GlamorousCar/AlgoWay
 
 go 1.20
 
