@@ -13,11 +13,15 @@ type AlgorithmTheoryModel struct {
 }
 
 func (m AlgorithmTheoryModel) Get(id int) (*models.AlgorithmTheory, error) {
-	query := "SELECT id,content FROM theory WHERE algorithm_id=$1"
+	query := `SELECT t.id, a.title, t.content FROM algorithm AS a
+	JOIN theory AS t
+	ON a.theory_id=t.id
+	WHERE a.id=$1`
+
 	row := m.Conn.QueryRow(context.Background(), query, id)
 
 	var theory = &models.AlgorithmTheory{}
-	err := row.Scan(&theory.ID, &theory.Content)
+	err := row.Scan(&theory.ID, &theory.Title, &theory.Content)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
