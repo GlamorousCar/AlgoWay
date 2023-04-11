@@ -22,14 +22,20 @@ func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
 		return nil, err
 	}
 
+	// Contains unique themes
 	themes := make([]models.Theme, 0, defaultCapacity)
+
+	// Map, where key - the position of the theme to which the algorithm relates
+	// value - slice of algorithms
 	algos := make(map[int][]models.Algorithm)
+
+	// Holds position of current unique theme
 	currentPosition := -1
 
 	for rows.Next() {
 		theme := models.Theme{}
 		algo := models.Algorithm{}
-		err := rows.Scan(
+		err = rows.Scan(
 			&theme.Id, &theme.Title, &theme.Position,
 			&algo.Id, &algo.Title, &algo.Description, &algo.Position, &algo.ThemeId,
 		)
@@ -48,7 +54,7 @@ func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
 		if !found {
 			algos[currentPosition] = make([]models.Algorithm, 0, defaultCapacity)
 		}
-		
+
 		algos[currentPosition] = append(algos[currentPosition], algo)
 	}
 
