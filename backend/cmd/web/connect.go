@@ -12,7 +12,7 @@ import (
 var (
 	host     = getEnvVar("host")
 	dbPort   = getEnvVar("dbport")
-	user     = getEnvVar("dbuser")
+	dbUser   = getEnvVar("dbuser")
 	password = getEnvVar("dbpass")
 	dbname   = getEnvVar("dbname")
 	ca       = getEnvVar("ca")
@@ -32,11 +32,10 @@ func dbConnect() (*pgx.Conn, error) {
 
 	connString := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
-		host, dbPort, dbname, user, password)
+		host, dbPort, dbname, dbUser, password)
 
 	connConfig, err := pgx.ParseConfig(connString)
 	if err != nil {
-		//fmt.Printf("Unable to parse config: %v\n", err)
 		return nil, err
 	}
 
@@ -47,7 +46,6 @@ func dbConnect() (*pgx.Conn, error) {
 
 	conn, err := pgx.ConnectConfig(context.Background(), connConfig)
 	if err != nil {
-		//fmt.Printf("Unable to connect to database: %v\n", err)
 		return nil, err
 	}
 

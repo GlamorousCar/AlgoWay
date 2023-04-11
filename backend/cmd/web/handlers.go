@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-const algorithmId = "algoId"
+const algorithmId = "algo_id"
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
