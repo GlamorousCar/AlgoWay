@@ -10,6 +10,7 @@ import (
 )
 
 const algorithmId = "algo_id"
+const theory_id = "theory_id"
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -55,7 +56,7 @@ func (app *application) getThemesMenu(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	id, err := strconv.Atoi(r.URL.Query().Get(algorithmId))
+	id, err := strconv.Atoi(r.URL.Query().Get(theory_id))
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
