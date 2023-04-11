@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/GlamorousCar/AlgoWay/pkg/models"
 	"github.com/jackc/pgx/v4"
-	"log"
 )
 
 type ThemeMenuModel struct {
@@ -13,38 +12,56 @@ type ThemeMenuModel struct {
 
 func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
 	query := `SELECT t.id, t.title, t.position,
-		a.id, a.title, a.description, a.position, a.theme_id
-		FROM algorithm AS a
-		JOIN theme AS t ON a.theme_id=t.id`
+	a.id, a.title, a.description, a.position, a.theme_id
+	FROM algorithm AS a
+	JOIN theme AS t ON a.theme_id=t.id
+	ORDER BY t.position, a.position`
 
 	rows, err := m.Conn.Query(context.Background(), query)
 	if err != nil {
 		return nil, err
 	}
 
-	themes := make(map[models.Theme][]models.Algorithm)
+	// Contains unique themes
+	themes := make([]models.Theme, 0, defaultCapacity)
+
+	// Map, where key - the position of the theme to which the algorithm relates
+	// value - slice of algorithms
+	algos := make(map[int][]models.Algorithm)
+
+	// Holds position of current unique theme
+	currentPosition := -1
+
 	for rows.Next() {
 		theme := models.Theme{}
 		algo := models.Algorithm{}
-		err := rows.Scan(
+		err = rows.Scan(
 			&theme.Id, &theme.Title, &theme.Position,
 			&algo.Id, &algo.Title, &algo.Description, &algo.Position, &algo.ThemeId,
 		)
+
 		if err != nil {
-			log.Fatal(err)
-		} else {
-			_, found := themes[theme]
-			if !found {
-				themes[theme] = make([]models.Algorithm, 1)
-				themes[theme][0] = algo
-			} else {
-				themes[theme] = append(themes[theme], algo)
-			}
+			return nil, err
 		}
+
+		themesSize := len(themes)
+		if currentPosition == -1 || theme.Position != themes[themesSize-1].Position {
+			themes = append(themes, theme)
+			currentPosition = theme.Position
+		}
+
+		_, found := algos[currentPosition]
+		if !found {
+			algos[currentPosition] = make([]models.Algorithm, 0, defaultCapacity)
+		}
+
+		algos[currentPosition] = append(algos[currentPosition], algo)
 	}
 
 	menus := make([]models.ThemeMenu, 0)
-	for theme, algo := range themes {
+	for _, theme := range themes {
+		algo := algos[theme.Position]
+
 		elem := models.ThemeMenu{
 			Id:         theme.Id,
 			Title:      theme.Title,
