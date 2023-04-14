@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/GlamorousCar/AlgoWay/pkg/models"
-	"log"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -130,11 +129,11 @@ func isEmpty(str string) bool {
 // TODO перенести в отдельный файл?
 func validateLogin(login string) error {
 	if isEmpty(login) {
-		return errors.New("Поле должно быть заполнено")
+		return errors.New("поле должно быть заполнено")
 		//"Пустое поле"
-	} else if len(login) < 7 {
+	} else if len(login) < 5 {
 		//	слишком короткое имя
-		return errors.New("Логин должен состоять из не менее 7 символов")
+		return errors.New("логин должен состоять из не менее 5 символов")
 	} else if !userRegexp.MatchString(login) {
 		return errors.New("Логин может состоять из символов латиницы, цифр и _ ")
 		// логин должен состоять из букв цифр и нижнего подчеркивания
@@ -143,18 +142,18 @@ func validateLogin(login string) error {
 }
 func validateEmail(email string) error {
 	if !emailRegexp.MatchString(email) {
-		return errors.New("Неверный формат email")
+		return errors.New("неверный формат email")
 	}
 	return nil
 }
 
 func validatePass(pass string) error {
 	if len(pass) < 7 {
-		return errors.New("Пароль должен быть больше 7 символов")
+		return errors.New("пароль должен быть больше 7 символов")
 	} else if len(pass) > 71 {
-		return errors.New("Пароль должен быть меньше 71 символа")
+		return errors.New("пароль должен быть меньше 71 символа")
 	} else if !passRegexp.MatchString(pass) {
-		return errors.New("Неверный формат пароля")
+		return errors.New("неверный формат пароля")
 	}
 	return nil
 }
@@ -168,7 +167,9 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&rawUser)
 
 	if err != nil {
-		log.Println(err)
+		app.errorLogger.Println(err.Error())
+		app.customError(w, "Проблема с введенными данными, проверьте их корректность")
+		return
 	}
 	err = validateLogin(rawUser.Login)
 	if err != nil {
@@ -187,19 +188,14 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 	err = app.PostgresqlConfig.UserModel.Register(rawUser)
 	if err != nil {
-		log.Println()
+		//log.Println(err.Error())
+		app.customError(w, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
+	_, err = w.Write([]byte("Регистрация прошла успешно"))
+	if err != nil {
 
-	//log.Println(!isEmpty(rawUser.Login))
-
-	//log.Printf("%v,%T", rawUser.HashPass, rawUser.HashPass)
-	userJson, err := json.Marshal(rawUser)
-	w.Write(userJson)
-	//rawUser = models.User{}
-	//log.Println(r.Body)
-	//log.Println(r.GetBody)
-	//log.Println(r.Body.Read(r))
-	//rawid := r.
-	//fmt.Println(rawid())
+		return
+	}
 }
