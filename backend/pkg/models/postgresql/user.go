@@ -3,10 +3,10 @@ package postgresql
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/GlamorousCar/AlgoWay/pkg/models"
 	"github.com/jackc/pgx/v4"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 )
 
 type UserModel struct {
@@ -17,12 +17,12 @@ type JWTToken struct {
 	id int
 }
 
-func hashAndSalt(pwd string) string {
+func hashAndSalt(pwd string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.MinCost)
 	if err != nil {
-		log.Println(err)
+		return "", err
 	}
-	return string(hash)
+	return string(hash), nil
 }
 
 func (m UserModel) Register(user models.RawUser) error {
@@ -33,30 +33,19 @@ func (m UserModel) Register(user models.RawUser) error {
 	err := val.Scan(&login, &email)
 
 	if err == nil {
-		//log.Println("Пользователь уже существует")
 		return errors.New("пользователь уже существует") //Дальше регистрировать нельзя
 	}
 
-	hash := hashAndSalt(user.Password) // Полученный запрос хэшируем
+	hash, err := hashAndSalt(user.Password) // Полученный запрос хэшируем
+	if err != nil {
+		return errors.New("Проблема с паролем")
+	}
 
 	query := "INSERT INTO public.algo_user (login, email, hash_pass, is_active) VALUES ($1,$2,$3,TRUE)"
 
 	_, err = m.Conn.Exec(context.Background(), query, user.Login, user.Email, hash)
-	if err != nil {
-		log.Printf("Unable to INSERT: %v\n", err) // Непредвиденные обстоятельства
-		return err
+	if err != nil { // Непредвиденные обстоятельства
+		return errors.New(fmt.Sprintf("Unable to INSERT: %v\n", err))
 	}
 	return nil
 }
-
-//func checkJWT() {
-//
-//}
-//
-//func createJWT() {
-//
-//}
-//
-//func loginUser() {
-//
-//}
