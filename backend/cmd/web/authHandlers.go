@@ -49,3 +49,29 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *application) logiUser(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/auth/login" {
+		app.notFound(w)
+		return
+	}
+	loginUser := models.LoginUser{}
+	err := json.NewDecoder(r.Body).Decode(&loginUser)
+
+	if err != nil {
+		app.errorLogger.Println(err)
+		app.clientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
+		return
+	}
+
+	err = app.PostgresqlConfig.UserModel.Login(loginUser)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write([]byte("Проверка прошла успешно"))
+	if err != nil {
+		return
+	}
+}

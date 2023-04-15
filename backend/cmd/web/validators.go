@@ -19,7 +19,7 @@ func isEmpty(str string) bool {
 	return len(str) == 0
 }
 
-func (m Validator) validateLogin(login string) error {
+func (m *Validator) validateLogin(login string) error {
 	if isEmpty(login) {
 		return errors.New("поле должно быть заполнено")
 		//"Пустое поле"
@@ -32,14 +32,14 @@ func (m Validator) validateLogin(login string) error {
 	}
 	return nil
 }
-func (m Validator) validateEmail(email string) error {
+func (m *Validator) validateEmail(email string) error {
 	if !emailRegexp.MatchString(email) {
 		return errors.New("неверный формат email")
 	}
 	return nil
 }
 
-func (m Validator) validatePass(pass string) error {
+func (m *Validator) validatePass(pass string) error {
 	if len(pass) < minPasswordLen {
 		return errors.New("пароль должен быть больше 7 символов")
 	} else if len(pass) > maxPasswordLen {
