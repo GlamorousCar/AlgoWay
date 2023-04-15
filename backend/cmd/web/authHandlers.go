@@ -38,7 +38,7 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = app.PostgresqlConfig.UserModel.Register(rawUser)
+	err = app.PostgresqlConfig.AuthService.Register(rawUser)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest, err.Error())
 		return
@@ -64,7 +64,7 @@ func (app *application) logiUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.PostgresqlConfig.UserModel.Login(loginUser)
+	err = app.PostgresqlConfig.AuthService.Login(loginUser)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest, err.Error())
 		return

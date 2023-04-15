@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-type UserModel struct {
+type AuthService struct {
 	Conn *pgx.Conn
 }
 
@@ -26,7 +26,7 @@ func hashAndSalt(pwd string) (string, error) {
 	return string(hash), nil
 }
 
-func (m UserModel) Register(user models.RawUser) error {
+func (m AuthService) Register(user models.RawUser) error {
 	checkIfUserExistQuery := "SELECT login,email from public.algo_user where login=$1 or email=$2"
 	val := m.Conn.QueryRow(context.Background(), checkIfUserExistQuery, user.Login, user.Email)
 
@@ -52,7 +52,7 @@ func (m UserModel) Register(user models.RawUser) error {
 	return nil
 }
 
-func (m UserModel) Login(user models.LoginUser) error {
+func (m AuthService) Login(user models.LoginUser) error {
 	query := `SELECT email, hash_pass from public.algo_user where email=$1`
 
 	val := m.Conn.QueryRow(context.Background(), query, user.Email)
