@@ -15,13 +15,13 @@ func NewConfig(conn *pgx.Conn) *Config {
 	taskModel := &TaskModel{Conn: conn}
 	homeModel := &HomeModel{Conn: conn}
 	themeMenuModel := &ThemeMenuModel{Conn: conn}
-	AuthService := &AuthService{Conn: conn}
+	authService := &AuthService{Conn: conn}
 
 	return &Config{
 		AlgorithmTheoryModel: algorithmTheoryModel,
 		TaskModel:            taskModel,
 		HomeModel:            homeModel,
 		ThemeMenuModel:       themeMenuModel,
-		AuthService:          AuthService,
+		AuthService:          authService,
 	}
 }
