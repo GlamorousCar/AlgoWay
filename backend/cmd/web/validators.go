@@ -11,9 +11,10 @@ type Validator struct {
 var emailRegexp = regexp.MustCompile(EmailPattern)
 var userRegexp = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 var passRegexp = regexp.MustCompile("^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+$")
-var minPasswordLen = 7
-var maxPasswordLen = 71
-var minLoginLen = 7
+
+const minPasswordLen = 7
+const maxPasswordLen = 71
+const minLoginLen = 7
 
 func isEmpty(str string) bool {
 	return len(str) == 0
