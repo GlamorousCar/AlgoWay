@@ -10,12 +10,13 @@ import (
 )
 
 var (
-	host     = getEnvVar("host")
-	dbPort   = getEnvVar("dbport")
-	dbUser   = getEnvVar("dbuser")
-	password = getEnvVar("dbpass")
-	dbname   = getEnvVar("dbname")
-	ca       = getEnvVar("ca")
+	host      = getEnvVar("host")
+	dbPort    = getEnvVar("dbport")
+	dbUser    = getEnvVar("dbuser")
+	password  = getEnvVar("dbpass")
+	dbname    = getEnvVar("dbname")
+	ca        = getEnvVar("ca")
+	secretKey = getEnvVar("secret_key")
 )
 
 func dbConnect() (*pgx.Conn, error) {

@@ -9,4 +9,5 @@ type application struct {
 	errorLogger      *log.Logger
 	infoLogger       *log.Logger
 	PostgresqlConfig *postgresql.Config
+	Validator        *Validator
 }

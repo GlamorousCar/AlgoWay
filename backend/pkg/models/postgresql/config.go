@@ -7,6 +7,7 @@ type Config struct {
 	TaskModel            *TaskModel
 	HomeModel            *HomeModel
 	ThemeMenuModel       *ThemeMenuModel
+	AuthService          *AuthService
 }
 
 func NewConfig(conn *pgx.Conn) *Config {
@@ -14,11 +15,13 @@ func NewConfig(conn *pgx.Conn) *Config {
 	taskModel := &TaskModel{Conn: conn}
 	homeModel := &HomeModel{Conn: conn}
 	themeMenuModel := &ThemeMenuModel{Conn: conn}
+	authService := &AuthService{Conn: conn}
 
 	return &Config{
 		AlgorithmTheoryModel: algorithmTheoryModel,
 		TaskModel:            taskModel,
 		HomeModel:            homeModel,
 		ThemeMenuModel:       themeMenuModel,
+		AuthService:          authService,
 	}
 }
