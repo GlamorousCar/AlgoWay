@@ -50,7 +50,11 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) logiUser(w http.ResponseWriter, r *http.Request) {
+type Token struct {
+	Token string `json:"token"`
+}
+
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/login" {
 		app.notFound(w)
 		return
@@ -64,14 +68,29 @@ func (app *application) logiUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.PostgresqlConfig.AuthService.Login(loginUser)
+	token_value, err := app.PostgresqlConfig.AuthService.Login(loginUser)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte("Проверка прошла успешно"))
+	token := Token{}
+	token.Token = token_value
+
 	if err != nil {
+		app.serverError(w, err)
+		app.errorLogger.Println(err)
 		return
 	}
+
+	jsonResp, err := json.Marshal(token)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	_, err = w.Write(jsonResp)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
