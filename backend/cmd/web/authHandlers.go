@@ -68,17 +68,16 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token_value, err := app.PostgresqlConfig.AuthService.Login(loginUser)
+	tokenValue, err := app.PostgresqlConfig.AuthService.Login(loginUser)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	token := Token{}
-	token.Token = token_value
+	token.Token = tokenValue
 
 	if err != nil {
 		app.serverError(w, err)
-		app.errorLogger.Println(err)
 		return
 	}
 
