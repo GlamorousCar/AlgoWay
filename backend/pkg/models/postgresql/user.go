@@ -5,17 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/GlamorousCar/AlgoWay/pkg/models"
+	"github.com/golang-jwt/jwt"
 	"github.com/jackc/pgx/v4"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"os"
+	"time"
 )
 
 type AuthService struct {
 	Conn *pgx.Conn
-}
-
-type JWTToken struct {
-	id int
 }
 
 func hashAndSalt(pwd string) (string, error) {
@@ -52,20 +51,63 @@ func (m AuthService) Register(user models.RawUser) error {
 	return nil
 }
 
-func (m AuthService) Login(user models.LoginUser) error {
-	query := `SELECT email, hash_pass from public.algo_user where email=$1`
+type tokenClaims struct {
+	jwt.StandardClaims
+	UserId int `json:"user_id"`
+}
+
+const tokenTTL = 12 * time.Hour
+
+type JWTToken struct {
+	token string
+}
+
+// По токену получает id пользователя
+func (m AuthService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return 0, errors.New("token claims are not of type *tokenClaims")
+	}
+	return claims.UserId, nil
+}
+
+func (m AuthService) GenerateToken(user models.LoginUser) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		user.Id,
+	})
+	return token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+}
+func (m AuthService) Login(user models.LoginUser) (string, error) {
+	query := `SELECT id, email, hash_pass from public.algo_user where email=$1`
 
 	val := m.Conn.QueryRow(context.Background(), query, user.Email)
-
+	var id int
 	var email, hashPass string
-	err := val.Scan(&email, &hashPass)
-	log.Println(hashPass)
+	err := val.Scan(&id, &email, &hashPass)
+	user.Id = id
 	if err != nil {
-		return errors.New("Проблема с введенными данными" + err.Error())
+		return "", err
 	}
-	check := bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(user.Password)) // проверка паролей
-	if check != nil {
-		return check
+	err = bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(user.Password)) // проверка паролей
+	if err != nil {
+		return "", err
 	}
-	return nil
+	token, err := m.GenerateToken(user)
+	return token, err
+
 }
