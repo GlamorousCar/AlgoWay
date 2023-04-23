@@ -13,35 +13,34 @@ const (
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/register" {
-		app.notFound(w)
+		helpers.NotFound(w)
 		return
 	}
 	rawUser := models.RawUser{}
 	err := json.NewDecoder(r.Body).Decode(&rawUser)
 
 	if err != nil {
-		app.errorLogger.Println(err)
-		app.clientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
+		helpers.ClientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
 		return
 	}
-	err = app.Validator.validateLogin(rawUser.Login)
+	err = helpers.ValidateLogin(rawUser.Login)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest, err.Error())
+		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = app.Validator.validateEmail(rawUser.Email)
+	err = helpers.ValidateEmail(rawUser.Email)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest, err.Error())
+		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = app.Validator.validatePass(rawUser.Password)
+	err = helpers.ValidatePass(rawUser.Password)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest, err.Error())
+		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	err = app.PostgresqlConfig.AuthService.Register(rawUser)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest, err.Error())
+		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -57,21 +56,20 @@ type Token struct {
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/login" {
-		app.notFound(w)
+		helpers.NotFound(w)
 		return
 	}
 	loginUser := models.LoginUser{}
 	err := json.NewDecoder(r.Body).Decode(&loginUser)
 
 	if err != nil {
-		app.errorLogger.Println(err)
-		app.clientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
+		helpers.ClientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
 		return
 	}
 
 	tokenValue, err := app.PostgresqlConfig.AuthService.Login(loginUser)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest, err.Error())
+		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	token := Token{}
@@ -84,7 +82,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	jsonResp, err := json.Marshal(token)
 	if err != nil {
-		app.serverError(w, err)
+		helpers.ServerError(w, err)
 		return
 	}
 	_, err = w.Write(jsonResp)
