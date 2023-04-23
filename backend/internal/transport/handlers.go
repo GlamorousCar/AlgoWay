@@ -1,26 +1,50 @@
-package main
+package transport
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
+	"github.com/GlamorousCar/AlgoWay/internal/app"
+	"github.com/GlamorousCar/AlgoWay/internal/database"
+	"github.com/GlamorousCar/AlgoWay/internal/helpers"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 const algorithmId = "algo_id"
 
-func (app *application) home(w http.ResponseWriter, r *http.Request) {
+type MainHandler struct {
+	db database.DB
+}
+
+func MakeMainHandler(db database.DB) *MainHandler {
+	return &MainHandler{db: db}
+}
+
+func (h *MainHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
+	id := 3 // parse id from request
+
+	user, err := h.db.GetUserById(id)
+	if err != nil {
+		// handle error
+	}
+	log.Println(user)
+	return
+	// return user as JSON
+}
+
+func (h *MainHandler) Home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		app.notFound(w)
+		helpers.NotFound(w)
 		return
 	}
 
-	version, err := app.PostgresqlConfig.HomeModel.GetVersion()
+	version, err := h.db.GetVersion()
 
 	if err != nil {
-		app.serverError(w, err)
+		helpers.ServerError(w, err)
 	}
 	_, err = w.Write([]byte(fmt.Sprintf("Успешное подключение\n %s", version)))
 	if err != nil {
@@ -28,7 +52,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) getThemesMenu(w http.ResponseWriter, r *http.Request) {
+func (h *MainHandler) GetThemesMenu(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/themes/menu" {
 		app.notFound(w)
 		return
@@ -36,7 +60,8 @@ func (app *application) getThemesMenu(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	menus, err := app.PostgresqlConfig.ThemeMenuModel.Get()
+	menus, err := database.ThemeMenuModel.Get()
+	h.db.
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -53,7 +78,7 @@ func (app *application) getThemesMenu(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) getAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
+func GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	id, err := strconv.Atoi(r.URL.Query().Get(algorithmId))
 	if err != nil || id < 1 {
@@ -81,7 +106,7 @@ func (app *application) getAlgorithmTheory(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (app *application) getAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
+func GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/task" {
 		app.notFound(w)
 		return
@@ -93,7 +118,7 @@ func (app *application) getAlgorithmTasks(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	tasks, err := app.PostgresqlConfig.TaskModel.GetTasks(algoId)
+	tasks, err := database.TaskModel.GetTasks(algoId)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)

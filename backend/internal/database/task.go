@@ -1,10 +1,10 @@
-package postgresql
+package database
 
 import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 

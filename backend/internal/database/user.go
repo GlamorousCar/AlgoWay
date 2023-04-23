@@ -1,10 +1,10 @@
-package postgresql
+package database
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/golang-jwt/jwt"
 	"github.com/jackc/pgx/v4"
 	"golang.org/x/crypto/bcrypt"

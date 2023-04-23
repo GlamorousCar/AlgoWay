@@ -1,14 +1,15 @@
-package main
+package helpers
 
 import (
 	"errors"
+	"github.com/GlamorousCar/AlgoWay/internal/transport"
 	"regexp"
 )
 
 type Validator struct {
 }
 
-var emailRegexp = regexp.MustCompile(EmailPattern)
+var emailRegexp = regexp.MustCompile(transport.EmailPattern)
 var userRegexp = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 var passRegexp = regexp.MustCompile("^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+$")
 
