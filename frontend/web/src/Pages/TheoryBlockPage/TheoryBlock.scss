@@ -1,4 +1,4 @@
-@import "../../../App";
+@import "../../App";
 
 .container {
   padding: 30px 30px 20px 50px;
@@ -23,9 +23,7 @@
       width: 120px;
       height: 56px;
 
-      box-shadow: inset 0px -2px 0px #00E861;
-
-
+      border-bottom: 2px solid $main-green-color;
       flex: none;
       order: 0;
       flex-grow: 0;
@@ -41,7 +39,7 @@
       width: 131px;
       height: 56px;
       color: $no-active-color;
-      box-shadow: inset 0px -1px 1px $no-active-color;
+      border-bottom: 1px solid $no-active-color;
       flex: none;
       order: 1;
       flex-grow: 0;

@@ -18,7 +18,7 @@
       margin-right: 10px;
       font-weight: 900;
     }
-    .theme-list-item a.active{
+    .theme-list-item .active{
       color:$main-white-color;
     }
     .theme-list-item{
@@ -36,9 +36,11 @@
         padding: 5px;
         margin: 8px 0;
       }
-      .second-layer-list-item.active{
-        color:$main-green-color;
-        span{
+      .second-layer-list-item .active{
+        li{
+            color:$main-green-color;
+         }
+        a{
           color: $white-color-selected;
         }
       }
