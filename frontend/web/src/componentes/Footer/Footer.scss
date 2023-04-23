@@ -1,16 +1,15 @@
 @import "../../App";
-header{
-  position: sticky;
-  top:0;
+.footer{
 
-}
-.header{
   display:flex;
   justify-content: space-between;
+  right:0;
+  left:0;
   width: 100%;
-
   padding: 20px 50px 20px 40px ;
   background-color: $header-footer-color;
-  z-index: 2;
   box-sizing: border-box;
+  img{
+    width: 170px;
+  }
 }

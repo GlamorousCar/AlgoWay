@@ -13,7 +13,7 @@ const UseAlgoService = () => {
     }
 
     const getAlgorithmTheory = async (id: string | undefined)=>{
-        const res = await getRequest(`${_baseUrl}/theory?id=${id}`)
+        const res = await getRequest(`${_baseUrl}/theory?algo_id=${id}`)
         console.log(res)
         return res;
     }

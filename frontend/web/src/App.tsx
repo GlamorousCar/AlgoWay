@@ -4,6 +4,7 @@ import Header from "./componentes/Header/Header";
 import Drawer from "./componentes/Drawer/Drawer";
 import ContentBlock from "./componentes/ContentBlock/ContentBlock";
 import {BrowserRouter as Router} from "react-router-dom";
+import Footer from "./componentes/Footer/Footer";
 
 
 function App() {
@@ -11,10 +12,11 @@ function App() {
         <Router>
             <div className="App">
                 <Header/>
+                <Drawer/>
                 <div className="main">
-                    <Drawer/>
                     <ContentBlock/>
                 </div>
+                <Footer/>
             </div>
         </Router>
     );

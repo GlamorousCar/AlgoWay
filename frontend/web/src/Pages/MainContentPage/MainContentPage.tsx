@@ -14,7 +14,7 @@ return(
                 <p>Обучайся, тренируйся и подготавливайся к техническим собеседованиям, решая алгоритмические задачи на 5 языках программирования с автоматической проверкой решений и разными уровнями сложности.</p>
                 <button className={"main-content-button"}> Начать сейчас! </button>
             </div>
-            <img src={MainImg} alt={"main"}/>
+            <img className={'main-image'} src={MainImg} alt={"main"}/>
         </div>
     </div>
 

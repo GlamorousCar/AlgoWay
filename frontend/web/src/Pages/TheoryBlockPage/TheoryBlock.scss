@@ -1,7 +1,7 @@
 @import "../../App";
 
 .container {
-  padding: 30px 30px 20px 50px;
+  padding: 0 30px 20px 50px;
   height: 890px;
   .theory-title{
     font-weight: 700;
@@ -22,8 +22,8 @@
 
       width: 120px;
       height: 56px;
-
-      border-bottom: 2px solid $main-green-color;
+      color: $no-active-color;
+      border-bottom: 1px solid $no-active-color;
       flex: none;
       order: 0;
       flex-grow: 0;
@@ -33,7 +33,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 0px 4px 0px 0px;
+      padding: 0 4px 0 0;
       gap: 8px;
 
       width: 131px;
@@ -43,6 +43,10 @@
       flex: none;
       order: 1;
       flex-grow: 0;
+    }
+    .active{
+      border-bottom: 1px solid $main-green-color;
+      color: $white-color-selected;
     }
   }
 

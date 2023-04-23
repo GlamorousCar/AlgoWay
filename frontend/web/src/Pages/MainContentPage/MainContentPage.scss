@@ -3,7 +3,7 @@
 .main-page{
   background-color: $dark-grey-color;
   padding: 30px 30px 20px 50px;
-  height: 890px;
+
   .main-page-title{
     font-weight: 700;
     font-size: 64px;
@@ -11,9 +11,14 @@
     display: flex;
     align-items: center;
     color: $main-white-color;
+    margin-top: 0;
   }
  .main-page-content{
    display:flex;
+   .main-image{
+     width: 400px;
+     height: 400px;
+   }
    .main-page-content-description{
      width:520px;
 

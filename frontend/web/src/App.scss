@@ -5,13 +5,15 @@ $main-white-color : #FFFFFF;
 $white-color-selected : #F6F6F8;
 $no-active-color :rgba(246, 246, 248, 0.4);
 $scroll-color:rgba(0, 21, 24, 0.5);
+$header-footer-color:#0d2124;
 
 
 .App{
   font-family: $font-stack ;
   margin: 0;
-  padding-top: 50px;
-  padding-left: 18%;
+  max-width: 100%;
+  //padding-top: 50px;
+  //padding-left: 18%;
   background-color: $dark-grey-color;
   color: $main-white-color;
   font-style: normal;
@@ -22,5 +24,7 @@ $scroll-color:rgba(0, 21, 24, 0.5);
   min-height: 95%;
   .main{
     display:flex;
+    padding-left: 15%;
+    top: 50px;
   }
 }
