@@ -2,12 +2,51 @@ package main
 
 import (
 	"context"
-	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/GlamorousCar/AlgoWay/pkg/models/postgresql"
 )
+
+func main() {
+	infoLogger := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)
+	errorLogger := log.New(os.Stderr, "ERROR:\t", log.Ldate|log.Ltime|log.Lshortfile)
+
+	port := os.Getenv("PORT")
+	// Проверка, что переменная окружения была найдена
+	if port == "" {
+		port = ":4000"
+		infoLogger.Println("Переменная окружения PORT не установлена")
+	} else {
+		infoLogger.Println("PORT:", port)
+	}
+
+	conn, err := dbConnect()
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+	defer conn.Close(context.Background())
+
+	postgresqlConfig := postgresql.NewConfig(conn)
+
+	app := &application{
+		errorLogger:      errorLogger,
+		infoLogger:       infoLogger,
+		PostgresqlConfig: postgresqlConfig,
+	}
+
+	infoLogger.Printf("Запуск веб-сервера на %s\n", port)
+	srv := http.Server{
+		Addr:     port,
+		ErrorLog: errorLogger,
+		Handler:  app.routes(),
+	}
+
+	err = srv.ListenAndServe()
+	errorLogger.Fatal(err)
+}
 
 func getEnvVar(key string) string {
 	err := godotenv.Load(".env")
@@ -16,41 +55,4 @@ func getEnvVar(key string) string {
 		log.Fatal(err)
 	}
 	return os.Getenv(key)
-}
-
-func main() {
-
-	defer func(conn *pgx.Conn, ctx context.Context) {
-		err := conn.Close(ctx)
-		if err != nil {
-			log.Println(err)
-		}
-	}(conn, context.Background())
-
-	err := dbConnect()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/themes/menu", getThemesMenu)
-	mux.HandleFunc("/theory", getAlgorithmTheory)
-	mux.HandleFunc("/task", getAlgorithmTasks)
-
-	port := os.Getenv("PORT")
-
-	// Проверка, что переменная окружения была найдена
-	if port == "" {
-		log.Println("Переменная окружения PORT не установлена")
-		log.Println("Пробую запуститься на 4000 порту")
-		err = http.ListenAndServe(":4000", mux)
-	} else {
-		log.Println("PORT:", port)
-		err = http.ListenAndServe(":"+port, mux)
-	}
-
-	log.Println("Запуск сервера на http://127.0.0.1")
-
-	log.Fatal(err)
 }
