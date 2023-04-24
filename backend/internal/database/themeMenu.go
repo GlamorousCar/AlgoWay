@@ -1,13 +1,12 @@
-package postgresql
+package database
 
 import (
 	"context"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
-	"github.com/jackc/pgx/v4"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 )
 
 type ThemeMenuModel struct {
-	Conn *pgx.Conn
+	db *DBImpl
 }
 
 func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
@@ -17,7 +16,7 @@ func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
 	JOIN theme AS t ON a.theme_id=t.id
 	ORDER BY t.position, a.position`
 
-	rows, err := m.Conn.Query(context.Background(), query)
+	rows, err := m.db.pool.Query(context.Background(), query)
 	if err != nil {
 		return nil, err
 	}

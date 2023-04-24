@@ -1,14 +1,15 @@
-package main
+package helpers
 
 import (
 	"errors"
+	"github.com/GlamorousCar/AlgoWay/internal/transport"
 	"regexp"
 )
 
 type Validator struct {
 }
 
-var emailRegexp = regexp.MustCompile(EmailPattern)
+var emailRegexp = regexp.MustCompile(transport.EmailPattern)
 var userRegexp = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 var passRegexp = regexp.MustCompile("^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+$")
 
@@ -20,7 +21,7 @@ func isEmpty(str string) bool {
 	return len(str) == 0
 }
 
-func (m *Validator) validateLogin(login string) error {
+func ValidateLogin(login string) error {
 	if isEmpty(login) {
 		return errors.New("поле должно быть заполнено")
 		//"Пустое поле"
@@ -33,14 +34,14 @@ func (m *Validator) validateLogin(login string) error {
 	}
 	return nil
 }
-func (m *Validator) validateEmail(email string) error {
+func ValidateEmail(email string) error {
 	if !emailRegexp.MatchString(email) {
 		return errors.New("неверный формат email")
 	}
 	return nil
 }
 
-func (m *Validator) validatePass(pass string) error {
+func ValidatePass(pass string) error {
 	if len(pass) < minPasswordLen {
 		return errors.New("пароль должен быть больше 7 символов")
 	} else if len(pass) > maxPasswordLen {

@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"context"
@@ -6,6 +6,8 @@ import (
 	"crypto/x509"
 	"fmt"
 	"github.com/jackc/pgx/v4"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 )
 
@@ -51,4 +53,13 @@ func dbConnect() (*pgx.Conn, error) {
 	}
 
 	return conn, nil
+}
+
+func getEnvVar(key string) string {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return os.Getenv(key)
 }
