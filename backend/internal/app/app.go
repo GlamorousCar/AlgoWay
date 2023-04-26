@@ -14,38 +14,6 @@ import (
 	"os"
 )
 
-func NewDB() (database.DB, error) {
-	rootCertPool := x509.NewCertPool()
-	pem, err := os.ReadFile(ca)
-	if err != nil {
-		return nil, err
-	}
-	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
-		return nil, err
-	}
-
-	connString := fmt.Sprintf(
-		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
-		host, dbPort, dbname, dbUser, password)
-
-	connConfig, err := pgx.ParseConfig(connString)
-	if err != nil {
-		return nil, err
-	}
-
-	connConfig.TLSConfig = &tls.Config{
-		RootCAs:            rootCertPool,
-		InsecureSkipVerify: true,
-	}
-
-	conn, err := pgx.ConnectConfig(context.Background(), connConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	return database.NewDBImpl(conn), nil
-}
-
 var (
 	host      = getEnvVar("host")
 	dbPort    = getEnvVar("dbport")
@@ -80,7 +48,7 @@ func RunServer() {
 
 	infoLogger.Printf("Запуск веб-сервера на %s\n", port)
 
-	db, err := NewDB()
+	db, err := newDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -93,4 +61,36 @@ func RunServer() {
 
 	err = srv.ListenAndServe()
 	errorLogger.Fatal(err)
+}
+
+func newDB() (database.DB, error) {
+	rootCertPool := x509.NewCertPool()
+	pem, err := os.ReadFile(ca)
+	if err != nil {
+		return nil, err
+	}
+	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
+		return nil, err
+	}
+
+	connString := fmt.Sprintf(
+		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
+		host, dbPort, dbname, dbUser, password)
+
+	connConfig, err := pgx.ParseConfig(connString)
+	if err != nil {
+		return nil, err
+	}
+
+	connConfig.TLSConfig = &tls.Config{
+		RootCAs:            rootCertPool,
+		InsecureSkipVerify: true,
+	}
+
+	conn, err := pgx.ConnectConfig(context.Background(), connConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return database.NewDBImpl(conn), nil
 }
