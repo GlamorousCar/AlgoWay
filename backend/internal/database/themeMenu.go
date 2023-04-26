@@ -5,10 +5,6 @@ import (
 	"github.com/GlamorousCar/AlgoWay/internal/models"
 )
 
-type ThemeMenuModel struct {
-	db *DBImpl
-}
-
 func (db *DBImpl) GetMenu() (*[]models.ThemeMenu, error) {
 	query := `SELECT t.id, t.title, t.position,
 	a.id, a.title, a.description, a.position, a.theme_id

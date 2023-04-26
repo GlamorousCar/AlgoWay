@@ -5,7 +5,7 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-// TODO разбить на два интерфейса main и authDB
+// DB TODO разбить на два интерфейса main и authDB
 type DB interface {
 	GetAlgoTheory(id int) (*models.AlgorithmTheory, error)
 	GetVersion() (string, error)
@@ -21,13 +21,3 @@ type DBImpl struct {
 func NewDBImpl(conn *pgx.Conn) *DBImpl {
 	return &DBImpl{conn: conn}
 }
-
-//func (db *DBImpl) GetUserById(id int) (*models.User, error) {
-//	conn, err := db.conn.Acquire(context.Background())
-//	if err != nil {
-//		return nil, err
-//	}
-//	defer conn.Release()
-//
-//	// ...
-//}

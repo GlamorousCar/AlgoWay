@@ -5,12 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
-	"github.com/jackc/pgx/v4"
 )
-
-type TaskModel struct {
-	Conn *pgx.Conn
-}
 
 const defaultCapacity = 10
 
