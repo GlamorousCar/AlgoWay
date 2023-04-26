@@ -9,14 +9,14 @@ type ThemeMenuModel struct {
 	db *DBImpl
 }
 
-func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
+func (db *DBImpl) GetMenu() (*[]models.ThemeMenu, error) {
 	query := `SELECT t.id, t.title, t.position,
 	a.id, a.title, a.description, a.position, a.theme_id
 	FROM algorithm AS a
 	JOIN theme AS t ON a.theme_id=t.id
 	ORDER BY t.position, a.position`
 
-	rows, err := m.db.pool.Query(context.Background(), query)
+	rows, err := db.conn.Query(context.Background(), query)
 	if err != nil {
 		return nil, err
 	}

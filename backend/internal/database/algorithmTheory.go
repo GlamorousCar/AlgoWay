@@ -13,7 +13,7 @@ func (db *DBImpl) GetAlgoTheory(id int) (*models.AlgorithmTheory, error) {
 	ON a.theory_id=t.id
 	WHERE a.id=$1`
 
-	row := db.pool.QueryRow(context.Background(), query, id)
+	row := db.conn.QueryRow(context.Background(), query, id)
 
 	var theory = &models.AlgorithmTheory{}
 	err := row.Scan(&theory.ID, &theory.Title, &theory.Content)
@@ -25,7 +25,5 @@ func (db *DBImpl) GetAlgoTheory(id int) (*models.AlgorithmTheory, error) {
 			return nil, err
 		}
 	}
-	defer db.pool.Close()
-
 	return theory, nil
 }

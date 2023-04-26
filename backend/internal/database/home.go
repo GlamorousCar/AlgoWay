@@ -11,7 +11,7 @@ type HomeModel struct {
 
 func (db *DBImpl) GetVersion() (string, error) {
 	var version string
-	err := db.pool.QueryRow(context.Background(), "select version()").Scan(&version)
+	err := db.conn.QueryRow(context.Background(), "select version()").Scan(&version)
 
 	return version, err
 }
