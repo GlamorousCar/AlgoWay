@@ -2,24 +2,28 @@ package database
 
 import (
 	"github.com/GlamorousCar/AlgoWay/internal/models"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v4"
 )
 
+// TODO разбить на два интерфейса main и authDB
 type DB interface {
 	GetAlgoTheory(id int) (*models.AlgorithmTheory, error)
 	GetVersion() (string, error)
-	Get() (*[]models.ThemeMenu, error)
+	GetTasks(id int) (*[]models.Task, error)
+	GetMenu() (*[]models.ThemeMenu, error)
+	Register(user models.RawUser) error
+	Login(user models.LoginUser) (string, error)
 }
 type DBImpl struct {
-	pool *pgxpool.Pool
+	conn *pgx.Conn
 }
 
-func NewDBImpl(pool *pgxpool.Pool) *DBImpl {
-	return &DBImpl{pool: pool}
+func NewDBImpl(conn *pgx.Conn) *DBImpl {
+	return &DBImpl{conn: conn}
 }
 
 //func (db *DBImpl) GetUserById(id int) (*models.User, error) {
-//	conn, err := db.pool.Acquire(context.Background())
+//	conn, err := db.conn.Acquire(context.Background())
 //	if err != nil {
 //		return nil, err
 //	}

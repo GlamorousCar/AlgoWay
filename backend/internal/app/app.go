@@ -2,22 +2,67 @@ package app
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"fmt"
 	"github.com/GlamorousCar/AlgoWay/internal/database"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
-	"github.com/GlamorousCar/AlgoWay/internal/transport"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v4"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 )
 
 func NewDB() (database.DB, error) {
-	pool, err := pgxpool.Connect(context.Background(), "...")
+	rootCertPool := x509.NewCertPool()
+	pem, err := os.ReadFile(ca)
+	if err != nil {
+		return nil, err
+	}
+	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
+		return nil, err
+	}
+
+	connString := fmt.Sprintf(
+		"host=%s port=%s dbname=%s user=%s password=%s sslmode=verify-full target_session_attrs=read-write",
+		host, dbPort, dbname, dbUser, password)
+
+	connConfig, err := pgx.ParseConfig(connString)
 	if err != nil {
 		return nil, err
 	}
 
-	return database.NewDBImpl(pool), nil
+	connConfig.TLSConfig = &tls.Config{
+		RootCAs:            rootCertPool,
+		InsecureSkipVerify: true,
+	}
+
+	conn, err := pgx.ConnectConfig(context.Background(), connConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return database.NewDBImpl(conn), nil
+}
+
+var (
+	host      = getEnvVar("host")
+	dbPort    = getEnvVar("dbport")
+	dbUser    = getEnvVar("dbuser")
+	password  = getEnvVar("dbpass")
+	dbname    = getEnvVar("dbname")
+	ca        = getEnvVar("ca")
+	secretKey = getEnvVar("secret_key")
+)
+
+func getEnvVar(key string) string {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return os.Getenv(key)
 }
 
 func RunServer() {
@@ -40,12 +85,10 @@ func RunServer() {
 		log.Fatal(err)
 	}
 
-	transport.MakeMainHandler(db)
-
 	srv := http.Server{
 		Addr:     port,
 		ErrorLog: errorLogger,
-		Handler:  routes(),
+		Handler:  routes(db),
 	}
 
 	err = srv.ListenAndServe()

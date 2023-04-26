@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/GlamorousCar/AlgoWay/internal/app"
 	"github.com/GlamorousCar/AlgoWay/internal/database"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -21,18 +19,6 @@ type MainHandler struct {
 
 func MakeMainHandler(db database.DB) *MainHandler {
 	return &MainHandler{db: db}
-}
-
-func (h *MainHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
-	id := 3 // parse id from request
-
-	user, err := h.db.GetUserById(id)
-	if err != nil {
-		// handle error
-	}
-	log.Println(user)
-	return
-	// return user as JSON
 }
 
 func (h *MainHandler) Home(w http.ResponseWriter, r *http.Request) {
@@ -60,8 +46,8 @@ func (h *MainHandler) GetThemesMenu(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	menus, err := database.ThemeMenuModel.Get()
-	h.db.
+	menus, err := h.db.GetMenu()
+
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -78,7 +64,7 @@ func (h *MainHandler) GetThemesMenu(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
+func (h *MainHandler) GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	id, err := strconv.Atoi(r.URL.Query().Get(algorithmId))
 	if err != nil || id < 1 {
@@ -86,7 +72,7 @@ func GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	theory, err := app.PostgresqlConfig.AlgorithmTheoryModel.Get(id)
+	theory, err := h.db.GetAlgoTheory(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			helpers.NotFound(w)
@@ -106,7 +92,7 @@ func GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
+func (h *MainHandler) GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/task" {
 		helpers.NotFound(w)
 		return
@@ -118,7 +104,7 @@ func GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tasks, err := database.TaskModel.GetTasks(algoId)
+	tasks, err := h.db.GetTasks(algoId)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			helpers.NotFound(w)

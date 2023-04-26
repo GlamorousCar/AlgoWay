@@ -25,9 +25,9 @@ func hashAndSalt(pwd string) (string, error) {
 	return string(hash), nil
 }
 
-func (m AuthService) Register(user models.RawUser) error {
+func (db *DBImpl) Register(user models.RawUser) error {
 	checkIfUserExistQuery := "SELECT login,email from public.algo_user where login=$1 or email=$2"
-	val := m.Conn.QueryRow(context.Background(), checkIfUserExistQuery, user.Login, user.Email)
+	val := db.conn.QueryRow(context.Background(), checkIfUserExistQuery, user.Login, user.Email)
 
 	var login, email string // Если при запросе вернулись данные, значит пользователь существует
 	err := val.Scan(&login, &email)
@@ -44,7 +44,7 @@ func (m AuthService) Register(user models.RawUser) error {
 
 	query := "INSERT INTO public.algo_user (login, email, hash_pass, is_active) VALUES ($1,$2,$3,TRUE)"
 
-	_, err = m.Conn.Exec(context.Background(), query, user.Login, user.Email, hash)
+	_, err = db.conn.Exec(context.Background(), query, user.Login, user.Email, hash)
 	if err != nil { // Непредвиденные обстоятельства
 		return errors.New(fmt.Sprintf("Unable to INSERT: %v\n", err))
 	}
@@ -63,7 +63,7 @@ type JWTToken struct {
 }
 
 // По токену получает id пользователя
-func (m AuthService) ParseToken(accessToken string) (int, error) {
+func (db *DBImpl) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -82,7 +82,7 @@ func (m AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func (m AuthService) GenerateToken(user models.LoginUser) (string, error) {
+func (db *DBImpl) GenerateToken(user models.LoginUser) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
@@ -92,10 +92,10 @@ func (m AuthService) GenerateToken(user models.LoginUser) (string, error) {
 	})
 	return token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 }
-func (m AuthService) Login(user models.LoginUser) (string, error) {
+func (db *DBImpl) Login(user models.LoginUser) (string, error) {
 	query := `SELECT id, email, hash_pass from public.algo_user where email=$1`
 
-	val := m.Conn.QueryRow(context.Background(), query, user.Email)
+	val := db.conn.QueryRow(context.Background(), query, user.Email)
 	var id int
 	var email, hashPass string
 	err := val.Scan(&id, &email, &hashPass)
@@ -107,7 +107,7 @@ func (m AuthService) Login(user models.LoginUser) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	token, err := m.GenerateToken(user)
+	token, err := db.GenerateToken(user)
 	return token, err
 
 }
