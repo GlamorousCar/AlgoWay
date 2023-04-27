@@ -1,25 +1,20 @@
-package postgresql
+package database
 
 import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
-	"github.com/jackc/pgx/v4"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 )
-
-type TaskModel struct {
-	Conn *pgx.Conn
-}
 
 const defaultCapacity = 10
 
-func (m TaskModel) GetTasks(id int) (*[]models.Task, error) {
+func (db *DBImpl) GetTasks(id int) (*[]models.Task, error) {
 	query := `SELECT id, is_solved, title, content 
 			FROM task 
 			WHERE algorithm_id=$1`
 
-	rows, err := m.Conn.Query(context.Background(), query, id)
+	rows, err := db.conn.Query(context.Background(), query, id)
 
 	algoTasks := make([]models.Task, 0, defaultCapacity)
 	for rows.Next() {
