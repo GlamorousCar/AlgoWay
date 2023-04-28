@@ -41,7 +41,7 @@ RUN echo dbname=$DBNAME >> .env
 RUN echo host=$HOST >> .env
 RUN echo dbpass=$DBPASS >> .env
 RUN echo dbport=$DBPORT >> .env
-RUN ECHO secretKey=$SECRET_KEY >> .env
+RUN echo secret_key=$SECRET_KEY >> .env
 RUN echo ca=.postgresql/root.crt >> .env
 
 
