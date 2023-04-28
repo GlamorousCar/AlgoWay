@@ -1,20 +1,34 @@
-package database
+package repository
 
 import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
+	"github.com/jackc/pgx/v4"
 )
 
 const defaultCapacity = 10
 
-func (db *DBImpl) GetTasks(id int) (*[]models.Task, error) {
+type TaskRepository interface {
+	GetTasks(id int) (*[]models.Task, error)
+}
+
+type taskRepositoryPostgres struct {
+	conn *pgx.Conn
+}
+
+func NewTaskRepositoryPostgres(conn *pgx.Conn) *taskRepositoryPostgres {
+	return &taskRepositoryPostgres{conn: conn}
+}
+
+func (repo *taskRepositoryPostgres) GetTasks(id int) (*[]models.Task, error) {
 	query := `SELECT id, is_solved, title, content 
 			FROM task 
 			WHERE algorithm_id=$1`
 
-	rows, err := db.conn.Query(context.Background(), query, id)
+	rows, err := repo.conn.Query(context.Background(), query, id)
 
 	algoTasks := make([]models.Task, 0, defaultCapacity)
 	for rows.Next() {
@@ -27,7 +41,7 @@ func (db *DBImpl) GetTasks(id int) (*[]models.Task, error) {
 		)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				return nil, models.ErrNoRecord
+				return nil, helpers.ErrNoRecord
 			} else {
 				return nil, err
 			}

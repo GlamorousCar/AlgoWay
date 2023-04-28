@@ -1,13 +1,22 @@
-package transport
+package controllers
 
 import (
 	"encoding/json"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
+	"github.com/GlamorousCar/AlgoWay/internal/usecase"
 	"net/http"
 )
 
-func (h *MainHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
+type AuthHandler struct {
+	userUseCase *usecase.UserUseCase
+}
+
+func NewAuthHandler(userUseCase *usecase.UserUseCase) *AuthHandler {
+	return &AuthHandler{userUseCase: userUseCase}
+}
+
+func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/register" {
 		helpers.NotFound(w)
 		return
@@ -19,26 +28,19 @@ func (h *MainHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		helpers.ClientError(w, http.StatusBadRequest, "Проблема с введенными данными, проверьте их корректность")
 		return
 	}
-	err = helpers.ValidateLogin(rawUser.Login)
+
+	err = h.userUseCase.ValidateUser(rawUser)
 	if err != nil {
 		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = helpers.ValidateEmail(rawUser.Email)
+
+	err = h.userUseCase.Register(rawUser)
 	if err != nil {
 		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = helpers.ValidatePass(rawUser.Password)
-	if err != nil {
-		helpers.ClientError(w, http.StatusBadRequest, err.Error())
-		return
-	}
-	err = h.db.Register(rawUser)
-	if err != nil {
-		helpers.ClientError(w, http.StatusBadRequest, err.Error())
-		return
-	}
+
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write([]byte("Регистрация прошла успешно"))
 	if err != nil {
@@ -46,11 +48,7 @@ func (h *MainHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type Token struct {
-	Token string `json:"token"`
-}
-
-func (h *MainHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/login" {
 		helpers.NotFound(w)
 		return
@@ -63,18 +61,13 @@ func (h *MainHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenValue, err := h.db.Login(loginUser)
+	tokenValue, err := h.userUseCase.Login(loginUser)
 	if err != nil {
 		helpers.ClientError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	token := Token{}
+	token := models.Token{}
 	token.Token = tokenValue
-
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
 
 	jsonResp, err := json.Marshal(token)
 	if err != nil {

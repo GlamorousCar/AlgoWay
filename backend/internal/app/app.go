@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/GlamorousCar/AlgoWay/internal/database"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
@@ -24,15 +23,6 @@ var (
 	secretKey = getEnvVar("secret_key")
 )
 
-func getEnvVar(key string) string {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	return os.Getenv(key)
-}
-
 func RunServer() {
 	infoLogger := helpers.InfoLogger
 	errorLogger := helpers.ErrorLogger
@@ -48,22 +38,32 @@ func RunServer() {
 
 	infoLogger.Printf("Запуск веб-сервера на %s\n", port)
 
-	db, err := newDB()
+	conn, err := getConnection()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	mux := initServeMux(conn)
 	srv := http.Server{
 		Addr:     port,
 		ErrorLog: errorLogger,
-		Handler:  routes(db),
+		Handler:  mux,
 	}
 
 	err = srv.ListenAndServe()
 	errorLogger.Fatal(err)
 }
 
-func newDB() (database.DB, error) {
+func getEnvVar(key string) string {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return os.Getenv(key)
+}
+
+func getConnection() (*pgx.Conn, error) {
 	rootCertPool := x509.NewCertPool()
 	pem, err := os.ReadFile(ca)
 	if err != nil {
@@ -92,5 +92,5 @@ func newDB() (database.DB, error) {
 		return nil, err
 	}
 
-	return database.NewDBImpl(conn), nil
+	return conn, nil
 }
