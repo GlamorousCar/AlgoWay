@@ -43,7 +43,8 @@ func RunServer() {
 		port = ":4000"
 		infoLogger.Println("Переменная окружения PORT не установлена")
 	} else {
-		infoLogger.Println("PORT:", port)
+		port = ":" + port
+		infoLogger.Println("PORT", port)
 	}
 
 	infoLogger.Printf("Запуск веб-сервера на %s\n", port)
