@@ -21,6 +21,7 @@ func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		helpers.NotFound(w)
 		return
 	}
+
 	rawUser := models.RawUser{}
 	err := json.NewDecoder(r.Body).Decode(&rawUser)
 
@@ -53,6 +54,7 @@ func (h *AuthHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		helpers.NotFound(w)
 		return
 	}
+
 	loginUser := models.LoginUser{}
 	err := json.NewDecoder(r.Body).Decode(&loginUser)
 

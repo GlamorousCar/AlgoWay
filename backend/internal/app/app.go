@@ -28,6 +28,7 @@ func RunServer() {
 	errorLogger := helpers.ErrorLogger
 
 	port := os.Getenv("PORT")
+
 	// Проверка, что переменная окружения была найдена
 	if port == "" {
 		port = ":4000"
