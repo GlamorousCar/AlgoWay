@@ -58,7 +58,7 @@ type tokenClaims struct {
 
 const tokenTTL = 12 * time.Hour
 
-// ParseToken По токену получает id пользователя
+// ParseToken по токену получает id пользователя
 func (db *DBImpl) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

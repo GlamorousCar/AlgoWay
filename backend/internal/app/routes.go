@@ -17,5 +17,7 @@ func routes(db database.DB) *http.ServeMux {
 	mux.HandleFunc("/auth/register", handlers.RegisterUser)
 	mux.HandleFunc("/auth/login", handlers.LoginUser)
 
+	//mux.HandleFunc("/check", handlers.Check)
+
 	return mux
 }

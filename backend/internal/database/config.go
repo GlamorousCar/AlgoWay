@@ -13,6 +13,7 @@ type DB interface {
 	GetMenu() (*[]models.ThemeMenu, error)
 	Register(user models.RawUser) error
 	Login(user models.LoginUser) (string, error)
+	Check()
 }
 type DBImpl struct {
 	conn *pgx.Conn
