@@ -1,0 +1,18 @@
+@import "../App/App";
+
+.progress-container{
+  width: 90%;
+  margin-top: 130px;
+  margin-bottom: 100px;
+  height: 120px;
+  background: $white-color-selected;
+  color: $dark-grey-color;
+  border-radius: 16px;
+  padding:30px;
+ .progress-title{
+    margin:0;
+  }
+  .progress-events{
+    display: flex;
+  }
+}

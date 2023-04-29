@@ -1,0 +1,30 @@
+@import "../App/App";
+
+.event-progress{
+  display: flex;
+  color: $dark-grey-color;
+  text-align: center;
+  justify-content: center;
+  margin-top: 30px;
+  margin-right: 83px;
+
+  .progress{
+    display: flex;
+    margin-left: 10px;
+    h4{
+      font-weight: 500;
+      font-size: 50px;
+      margin: 10px 0 0 0;
+
+    }
+    .done-event{
+      color: $main-green-color;
+    }
+  }
+  .progress-description{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 20px;
+  }
+}

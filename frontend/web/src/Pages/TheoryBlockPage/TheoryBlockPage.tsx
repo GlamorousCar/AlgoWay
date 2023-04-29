@@ -1,43 +1,44 @@
 import * as React from "react"
-import './TheoryBlock.scss'
+import './TheoryBlockPage.scss'
 import green_book from "../../images/Vector_book_green.svg";
 import grey_code from "../../images/Vector_code_default.svg"
-import {useParams} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
 import {IAlgorithm} from "../../types/types";
 import {useEffect, useState} from "react";
 
-const TheoryBlock = ()=>{
+const TheoryBlockPage = () => {
     const {algorithmId} = useParams();
     console.log(algorithmId)
 
 
-    const {getAlgorithmTheory}= useAlgoService();
+    const {getAlgorithmTheory} = useAlgoService();
     const [algorithm, setAlgorithm] = useState<IAlgorithm>();
 
 
-    useEffect(()=>{
+    useEffect(() => {
         getResources(algorithmId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
 
-    const getResources = (algorithmId: string | undefined)=>{
+    const getResources = (algorithmId: string | undefined) => {
         getAlgorithmTheory(algorithmId)
             .then(onAlgorithmLoaded)
     }
 
 
-    const onAlgorithmLoaded = (algorithm:IAlgorithm)=>{
+    const onAlgorithmLoaded = (algorithm: IAlgorithm) => {
         setAlgorithm(algorithm);
     }
-    return(
+    return (
         <div className={"theory"}>
             <div className="container">
-                <h3 className={"theory-title"}>{algorithm?.title ? algorithm.title:"В скором времени появится заголовок"}</h3>
+                <h3 className={"theory-title"}>{algorithm?.title ? algorithm.title : "В скором времени появится заголовок"}</h3>
                 <nav>
                     <ul className={"nav-switch"}>
                         <li className={"nav-item theory active"}>
-                            <img  src={green_book} alt=""/>
+
+                            <img src={green_book} alt=""/>
                             <span>Теория</span>
                         </li>
                         <li className={"nav-item practice "}>
@@ -58,4 +59,4 @@ const TheoryBlock = ()=>{
 }
 
 
-export default TheoryBlock
+export default TheoryBlockPage

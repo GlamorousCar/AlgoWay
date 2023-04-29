@@ -1,12 +1,18 @@
-@import "../../App";
+@import "../../componentes/App/App";
 
+.main{
+  display:flex;
+  padding-left: 15%;
+  top: 50px;
+}
 .container {
   padding: 0 30px 20px 50px;
-  height: 890px;
+  height: 70vh;
   .theory-title{
     font-weight: 700;
     font-size: 40px;
     line-height: 48px;
+    margin-bottom: 10px;
   }
 
   .nav-switch {
@@ -57,7 +63,7 @@
     padding: 0;
     gap: 30px;
 
-    height: 700px;
+    min-height: 150px;
     flex: none;
     order: 0;
     flex-grow: 0;

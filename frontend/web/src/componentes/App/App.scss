@@ -1,11 +1,12 @@
 $font-stack: Inter, sans-serif;
-$dark-grey-color: #001518;
+$dark-grey-color: #1B1F22;
 $main-green-color : #00E861;
+$light-green-color: rgba(0, 232, 97, 0.5);
 $main-white-color : #FFFFFF;
 $white-color-selected : #F6F6F8;
 $no-active-color :rgba(246, 246, 248, 0.4);
 $scroll-color:rgba(0, 21, 24, 0.5);
-$header-footer-color:#0d2124;
+$header-footer-color:#272A2D;
 
 
 .App{
@@ -22,9 +23,4 @@ $header-footer-color:#0d2124;
   line-height: 24px;
   align-items: center;
   min-height: 95%;
-  .main{
-    display:flex;
-    padding-left: 15%;
-    top: 50px;
-  }
 }
