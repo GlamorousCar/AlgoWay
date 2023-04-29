@@ -1,23 +1,31 @@
-package postgresql
+package repository
 
 import (
 	"context"
-	"github.com/GlamorousCar/AlgoWay/pkg/models"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 
-type ThemeMenuModel struct {
-	Conn *pgx.Conn
+type ThemeMenuRepository interface {
+	GetMenu() (*[]models.ThemeMenu, error)
 }
 
-func (m ThemeMenuModel) Get() (*[]models.ThemeMenu, error) {
+type themeMenuRepositoryPostgres struct {
+	conn *pgx.Conn
+}
+
+func NewThemeMenuRepositoryPostgres(conn *pgx.Conn) *themeMenuRepositoryPostgres {
+	return &themeMenuRepositoryPostgres{conn: conn}
+}
+
+func (repo *themeMenuRepositoryPostgres) GetMenu() (*[]models.ThemeMenu, error) {
 	query := `SELECT t.id, t.title, t.position,
 	a.id, a.title, a.description, a.position, a.theme_id
 	FROM algorithm AS a
 	JOIN theme AS t ON a.theme_id=t.id
 	ORDER BY t.position, a.position`
 
-	rows, err := m.Conn.Query(context.Background(), query)
+	rows, err := repo.conn.Query(context.Background(), query)
 	if err != nil {
 		return nil, err
 	}
