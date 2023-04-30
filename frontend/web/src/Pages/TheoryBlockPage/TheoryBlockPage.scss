@@ -15,11 +15,23 @@
     margin-bottom: 10px;
   }
 
+
   .nav-switch {
     display: flex;
     padding-left: 0;
+    margin-bottom: 20px;
+    text-decoration: none;
+    .nav-item{
+      text-decoration: none;
+    }
+    .nav-item.active{
+      border-bottom: 1px solid $main-green-color;
+      color: $white-color-selected;
+      text-decoration: none;
+    }
 
     .theory {
+      text-decoration: none;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -36,6 +48,7 @@
     }
 
     .practice {
+      text-decoration: none;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -49,10 +62,6 @@
       flex: none;
       order: 1;
       flex-grow: 0;
-    }
-    .active{
-      border-bottom: 1px solid $main-green-color;
-      color: $white-color-selected;
     }
   }
 

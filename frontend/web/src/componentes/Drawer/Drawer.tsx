@@ -1,91 +1,43 @@
 import * as React from "react"
 import './Drawer.scss'
-import { useEffect, useState} from "react";
-import useAlgoService from "../../services/UseAlgoService";
-import {IMenu} from "../../types/types";
-import { NavLink } from "react-router-dom";
 import Exit from '../../images/Exit-icon.svg';
 import {Transition} from "react-transition-group";
 import {useDispatch, useSelector} from "react-redux";
 import {drawerClosing} from "../../actions";
 import {IAppState} from "../../types/store";
+import ThemesList from "../ThemesList/ThemesList";
 
-const Drawer = ()=>{
-
-    const {getMenuTopics} = useAlgoService();
-    const [menu, setMenu] =useState<IMenu[]>([]);
-
-    const drawerStatus = useSelector((state:IAppState) =>state.drawerOpeningStatus);
+const Drawer = () => {
+    const drawerStatus = useSelector((state: IAppState) => state.drawerOpeningStatus);
     const dispatch = useDispatch();
 
-
-    useEffect(()=>{
-        getResources();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const getResources = ()=>{
-        getMenuTopics().then(onMenuLoaded);
-    }
-
-    const onMenuLoaded = (menuList:IMenu[])=>{
-        setMenu(menuList);
-    }
-
-    // const renderItems=!error? <View menu={menu}/>:<div>Ошибка</div>;
-
-    let  itemRefs: any[] = [];
-
-    const setRef = (ref: any) => {
-        itemRefs.push(ref);
-    }
-    const onFocusItem = (id:number) => {
-        itemRefs.forEach(item =>item.classList.remove('active'))
-        itemRefs[id].classList.add("active");
-        itemRefs[id].focus();
-    }
     const duration = 300;
     const defaultStyles = {
-        transition:`opacity ${duration}ms ease-in-out`,
-        opacity:0
+        transition: `opacity ${duration}ms ease-in-out`,
+        opacity: 0
     }
 
     const transitionStyles = {
-        entering:{opacity:1},
-        entered:{opacity:1},
-        exiting:{opacity:0},
-        exited:{opacity:0}
+        entering: {opacity: 1},
+        entered: {opacity: 1},
+        exiting: {opacity: 0},
+        exited: {opacity: 0}
     };
-    return(
-        <Transition in={drawerStatus} timeout={duration} unmountOnExit>
-            {state=>(
-                <div className={'drawer'} style={{...defaultStyles, ...transitionStyles[state as keyof typeof transitionStyles]}}>
+
+    function onEnterHandler() {
+        console.log("enter")
+    }
+
+    return (
+        <Transition in={drawerStatus} timeout={duration} unmountOnExit onEnter={onEnterHandler}>
+            {state => (
+                <div className={'drawer'}
+                     style={{...defaultStyles, ...transitionStyles[state as keyof typeof transitionStyles]}}>
                     <div className="exit-icon-block">
-                            <img onClick={()=>dispatch(drawerClosing())} src={Exit} alt="exit icon"/>
+                        <img onClick={() => dispatch(drawerClosing())} src={Exit} alt="exit icon"/>
                     </div>
                     <ul className={"theme-list"}>
-                        {
-                            menu.map((menuItem,index) =>{
-                                return(
-                                    <li  className={"theme-list-item"} key={menuItem.theme_id}  >
-                                <span ref={setRef}
-                                      className={"theme-list-item "}
-                                      onClick={()=> onFocusItem(index)}
-                                >{menuItem.title}</span>
-                                        <ul className={'second-layer-list'}>
-                                            {
-                                                menuItem.algorithms.map(algorithm=>{
-                                                    return(
-                                                        <li className={'second-layer-list-item'} key={algorithm.algorithm_id}>
-                                                            <NavLink to={`/topics/${algorithm.algorithm_id}`} className={"theme-list-item"}>{algorithm.title}</NavLink>
-                                                        </li>
-                                                    )
-                                                })}
-                                        </ul>
-                                    </li>
-                                )
-                            })
-                        }
+                        <ThemesList />
                     </ul>
                 </div>
             )}
@@ -131,3 +83,29 @@ export default Drawer
 //
 //     </ul>
 // </li>
+
+
+// <ul className={"theme-list"}>
+//     {
+//         menu.map((menuItem,index) =>{
+//             return(
+//                 <li  className={"theme-list-item"} key={menuItem.theme_id}  >
+//                                 <span ref={setRef}
+//                                       className={"theme-list-item "}
+//                                       onClick={()=> onFocusItem(index)}
+//                                 >{menuItem.title}</span>
+//                     <ul className={'second-layer-list'}>
+//                         {
+//                             menuItem.algorithms.map(algorithm=>{
+//                                 return(
+//                                     <li className={'second-layer-list-item'} key={algorithm.algorithm_id}>
+//                                         <NavLink to={`/topics/${algorithm.algorithm_id}`} className={"theme-list-item"}>{algorithm.title}</NavLink>
+//                                     </li>
+//                                 )
+//                             })}
+//                     </ul>
+//                 </li>
+//             )
+//         })
+//     }
+// </ul>

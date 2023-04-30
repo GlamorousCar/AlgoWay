@@ -1,16 +1,16 @@
 import * as React from "react"
 import './TheoryBlockPage.scss'
 import green_book from "../../images/Vector_book_green.svg";
-import grey_code from "../../images/Vector_code_default.svg"
-import {NavLink, useParams} from "react-router-dom";
+import default_book from "../../images/Vector_book_default.svg";
+import default_code from "../../images/Vector_code_default.svg"
+import green_code from "../../images/Vector_code_green.svg"
+import {NavLink, Outlet, useParams} from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
 import {IAlgorithm} from "../../types/types";
 import {useEffect, useState} from "react";
 
 const TheoryBlockPage = () => {
     const {algorithmId} = useParams();
-    console.log(algorithmId)
-
 
     const {getAlgorithmTheory} = useAlgoService();
     const [algorithm, setAlgorithm] = useState<IAlgorithm>();
@@ -34,24 +34,35 @@ const TheoryBlockPage = () => {
         <div className={"theory"}>
             <div className="container">
                 <h3 className={"theory-title"}>{algorithm?.title ? algorithm.title : "В скором времени появится заголовок"}</h3>
-                <nav>
-                    <ul className={"nav-switch"}>
-                        <li className={"nav-item theory active"}>
+                <nav className={"nav-switch"}>
+                    <NavLink to={"theory"} style={{textDecoration:"none"}} end>
+                        {({ isActive }) => {
+                            let className = isActive ? " active" : ""
+                            return (
 
-                            <img src={green_book} alt=""/>
-                            <span>Теория</span>
-                        </li>
-                        <li className={"nav-item practice "}>
-                            <img src={grey_code} alt=""/>
-                            <span>Практика</span>
-                        </li>
+                                <div className={`nav-item theory ${className}`}>
+                                    <img src={isActive ? green_book : default_book} alt=""/>
+                                    <span className={"nav-item-text"}> Теория</span>
+                                </div>
+                            )
+                        }}
 
-                    </ul>
+                    </NavLink>
+                    <NavLink to={"practice"} style={{textDecoration:"none"}}>
+                        {({ isActive, isPending }) => {
+                            let className = isActive ? " active" : ""
+                            return(
+                                <div className={`nav-item practice  ${className}`}>
+                                    <img src={isActive ? green_code : default_code} alt=""/>
+                                    <span className={"nav-item-text"}>Практика</span>
+                                </div>
+                            )
+                        }}
+                    </NavLink>
                 </nav>
 
                 <div className="content">
-                    <p>{algorithm?.content}</p>
-
+                    <Outlet/>
                 </div>
             </div>
         </div>
