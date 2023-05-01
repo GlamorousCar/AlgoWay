@@ -3,8 +3,6 @@ import Img from "../../images/Registration.png"
 import './RegistrationPage.scss'
 import {Outlet} from "react-router-dom";
 import Hand from "../../images/hand.svg"
-import GitHub from "../../images/GitHub.svg"
-import Google from "../../images/GoogleLogo.svg"
 
 const RegistrationPage:FC = () => {
 
