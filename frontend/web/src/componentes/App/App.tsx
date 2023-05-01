@@ -10,9 +10,10 @@ import PracticeBlock from "../PracticeBlock/PracticeBlock";
 import useAlgoService from "../../services/UseAlgoService";
 import {useEffect, useState} from "react";
 import {IMenu} from "../../types/types";
-import {useDispatch, useSelector} from "react-redux";
-import {IAppState} from "../../types/store";
-import {setMenuItems} from "../../actions";
+import {useDispatch} from "react-redux";
+import {setMenuItems} from "../../store/actions";
+import LoginForm from "../LoginForm/LoginForm";
+import RegistrationForm from "../RegistrationForm/RegistrationForm";
 
 
 
@@ -37,9 +38,12 @@ function App() {
         <Router>
             <div className="App">
                 <Routes>
-                    <Route  path={"/registration"} element={<RegistrationPage/>}/>
+                    <Route   element={<RegistrationPage/>}>
+                        <Route  path={"/login"} element={<LoginForm/>}/>
+                        <Route  path={"/registration"} element={<RegistrationForm/>}/>
+                    </Route>
                     <Route element={<ContentBlock/>}>
-                        <Route path={"/topics"} element={<TheoryBlockPage/>}/>
+                        <Route path={"/topics"} element={<MainContentPage/>}/>
                         <Route path={"/topics/:algorithmId"} element={<TheoryBlockPage/>}>
                             <Route index path={'theory'} element={<TheoryBlock/>}/>
                             <Route path={'practice'} element={<PracticeBlock/>}/>
