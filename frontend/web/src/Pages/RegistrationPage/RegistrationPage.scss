@@ -1,10 +1,25 @@
+@import "../../componentes/App/App";
 .registration{
   display: flex;
   img{
     height: 100vh;
   }
-  &-form{
-    display: flex;
-    flex-direction: column;
+  &-form-content{
+    margin: 100px  9%  0 9%;
+    .title-block{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .registration-title{
+        font-weight: 600;
+        font-size: 32px;
+        margin-top: 0 ;
+        margin-bottom: 5px;
+        text-align: center;
+
+      }
+    }
+
+
   }
 }

@@ -1,0 +1,55 @@
+@import "../App/App";
+
+.login-form{
+  display: flex;
+  flex-direction: column;
+  label{
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: $no-active-color;
+    margin: 24px 0 12px 0;
+  }
+  input{
+    border-radius: 8px;
+    border:1px solid  $no-active-color;
+  }
+  .button{
+    background-color: $main-green-color;
+    color: $white-color-selected;
+    margin-top: 25px;
+    padding: 5px 20px;
+    gap: 8px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    border: 0;
+  }
+}
+.alternative-block{
+  justify-content: center;
+  align-items: center;
+  .other-choices{
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    justify-content: center;
+    img{
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+    }
+  }
+  .alternative{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .selected{
+      text-decoration: none;
+      color: $main-green-color;
+    }
+  }
+}

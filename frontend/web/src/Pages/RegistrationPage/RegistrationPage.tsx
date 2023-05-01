@@ -1,22 +1,24 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 import Img from "../../images/Registration.png"
 import './RegistrationPage.scss'
+import {Outlet} from "react-router-dom";
+import Hand from "../../images/hand.svg"
+import GitHub from "../../images/GitHub.svg"
+import Google from "../../images/GoogleLogo.svg"
 
-const RegistrationPage = () => {
+const RegistrationPage:FC = () => {
+
+
+
     return (
         <div className={"registration"}>
             <img src={Img}/>
             <div className="registration-form-content">
-                <h4>Добро пожаловать</h4>
-                <div className="registration-form">
-                    <label htmlFor="email">Логин</label>
-                    <input type="text" name="login" />
-                    <label htmlFor="email">Адрес электронной почты</label>
-                    <input type="email" name="email" />
-                    <label htmlFor="email">Пароль</label>
-                    <input type="password" name="password" />
-                    <button>Создать аккаунт</button>
+                <div className="title-block">
+                    <h4 className={"registration-title"}>Добро пожаловать</h4>
+                    <img src={Hand} alt="" style={{width:"32px", height:"32px"}}/>
                 </div>
+                <Outlet/>
             </div>
         </div>
     );
