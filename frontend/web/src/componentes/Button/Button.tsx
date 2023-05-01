@@ -1,8 +1,9 @@
 import * as React from "react"
 import './Button.scss'
+import {ReactNode} from "react";
 
 interface ButtonProps{
-    text:string
+    text:string,
 }
 
 const Button = (props:ButtonProps)=>{
@@ -11,6 +12,7 @@ const Button = (props:ButtonProps)=>{
             <button>
                 {props.text}
             </button>
+
         </>
     )
 }
