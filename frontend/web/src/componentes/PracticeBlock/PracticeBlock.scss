@@ -1,0 +1,77 @@
+@import "../App/App";
+
+.practice-block{
+  display: flex;
+  width: 100%;
+  .information-block{
+    width:50%;
+    .task-select {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    select {
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      width: 300px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #6ea4f6;
+      box-shadow: 0 2px 5px rgba(110, 164, 246, 0.5);
+    }
+  }
+  .block-solve{
+    width:50%;
+    .code-block {
+      position: relative;
+      width: 100% ;
+      background-color: $no-active-color;
+      max-height: 300px;
+      overflow: auto;
+      .line-numbers {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        font-family: monospace;
+        font-size: 14px;
+        color: #ccc;
+        padding: 10px;
+        white-space: pre;
+        text-align: right;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+
+      .code-input {
+        font-family: monospace;
+        font-size: 14px;
+        border: none;
+        outline: none;
+        padding: 10px;
+        margin-left: 35px;
+        width: 90%;
+        resize: none;
+        display: inline-block;
+        vertical-align: top;
+        background-color: $no-active-color;
+        line-height: 24px;
+      }
+    }
+  }
+}
