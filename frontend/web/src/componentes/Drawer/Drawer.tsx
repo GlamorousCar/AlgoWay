@@ -3,7 +3,7 @@ import './Drawer.scss'
 import Exit from '../../images/Exit-icon.svg';
 import {Transition} from "react-transition-group";
 import {useDispatch, useSelector} from "react-redux";
-import {drawerClosing} from "../../actions";
+import {drawerClosing} from "../../store/actions";
 import {IAppState} from "../../types/store";
 import ThemesList from "../ThemesList/ThemesList";
 

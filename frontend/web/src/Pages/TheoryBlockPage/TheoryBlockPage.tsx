@@ -17,11 +17,11 @@ const TheoryBlockPage = () => {
 
 
     useEffect(() => {
-        getResources(algorithmId);
+        getResources(Number(algorithmId));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
 
-    const getResources = (algorithmId: string | undefined) => {
+    const getResources = (algorithmId: number) => {
         getAlgorithmTheory(algorithmId)
             .then(onAlgorithmLoaded)
     }
@@ -31,9 +31,9 @@ const TheoryBlockPage = () => {
         setAlgorithm(algorithm);
     }
     return (
-        <div className={"theory"}>
+        <div className={"algorithm"}>
             <div className="container">
-                <h3 className={"theory-title"}>{algorithm?.title ? algorithm.title : "В скором времени появится заголовок"}</h3>
+                <h3 className={"algorithm-title"}>{algorithm?.title ? algorithm.title : "В скором времени появится заголовок"}</h3>
                 <nav className={"nav-switch"}>
                     <NavLink to={"theory"} style={{textDecoration:"none"}} end>
                         {({ isActive }) => {

@@ -11,11 +11,11 @@ const TheoryBlock = () => {
 
 
     useEffect(() => {
-        getResources(algorithmId);
+        getResources(Number(algorithmId) );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
 
-    const getResources = (algorithmId: string | undefined) => {
+    const getResources = (algorithmId: number) => {
         getAlgorithmTheory(algorithmId)
             .then(onAlgorithmLoaded)
     }
