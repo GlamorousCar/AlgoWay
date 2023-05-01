@@ -12,3 +12,14 @@ export interface IAlgorithm{
     theme_id: number,
     content:string
 }
+export interface IUser{
+    email:string,
+    isActivated:boolean,
+    id:string
+}
+export interface ITask{
+    id:number,
+    is_solved:boolean,
+    title:string,
+    content:string
+}

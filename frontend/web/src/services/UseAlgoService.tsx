@@ -12,13 +12,16 @@ const UseAlgoService = () => {
         return res;
     }
 
-    const getAlgorithmTheory = async (id: string | undefined)=>{
+    const getAlgorithmTheory = async (id: number )=>{
         const res = await getRequest(`${_baseUrl}/theory?algo_id=${id}`)
-        console.log(res)
         return res;
     }
 
-    return {getMenuTopics,getAlgorithmTheory, error, clearError};
+    const getAlgorithmTasks = async (id:number) =>{
+        const res = await getRequest(`${_baseUrl}/task?algo_id=${id}`);
+        return res;
+    }
+    return {getMenuTopics,getAlgorithmTheory,getAlgorithmTasks, error, clearError};
 };
 
 export default UseAlgoService;
