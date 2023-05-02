@@ -5,8 +5,8 @@ import (
 )
 
 type Verdict struct {
-	abbr  string
-	title string
+	Abbr  string
+	Title string
 }
 
 type CheckSystem interface {

@@ -4,12 +4,11 @@ import (
 	"context"
 	"errors"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
-	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 
 type CheckSystemRepository interface {
-	Pass(id int) error
+	GetTask(id int) (int, error)
 }
 
 type checkSystemRepositoryPostgres struct {
@@ -20,23 +19,20 @@ func NewCheckSystemRepositoryPostgres(conn *pgx.Conn) *checkSystemRepositoryPost
 	return &checkSystemRepositoryPostgres{conn: conn}
 }
 
-func (repo checkSystemRepositoryPostgres) Pass(id int) error {
-	query := `SELECT t.id, a.title, t.content FROM algorithm AS a
-	JOIN theory AS t
-	ON a.theory_id=t.id
-	WHERE a.id=$1`
+func (repo checkSystemRepositoryPostgres) GetTask(id int) (int, error) {
+	query := `SELECT * FROM task WHERE id = $1`
 
 	row := repo.conn.QueryRow(context.Background(), query, id)
 
-	var theory = &models.AlgorithmTheory{}
-	err := row.Scan(&theory.ID, &theory.Title, &theory.Content)
+	var taskId int
+	err := row.Scan(&taskId)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return helpers.ErrNoRecord
+			return 0, helpers.ErrNoRecord
 		} else {
-			return err
+			return 0, err
 		}
 	}
-	return nil
+	return taskId, nil
 }
