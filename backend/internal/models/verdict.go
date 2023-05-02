@@ -1,6 +1,6 @@
 package models
 
 type Verdict struct {
-	Abbr  string
-	Title string
+	abbr  string
+	title string
 }

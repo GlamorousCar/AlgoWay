@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/GlamorousCar/AlgoWay/internal/usecase"
@@ -10,60 +9,33 @@ import (
 )
 
 type CheckSystemHandler struct {
-	userUseCase *usecase.UserUseCase
-	checkSystem *usecase.CheckSystemUseCase
+	userUseCase        *usecase.UserUseCase
+	checkSystemUseCase *usecase.CheckSystemUseCase
 }
 
-func NewCheckSystemHandler(checkSystem *usecase.CheckSystemUseCase) *CheckSystemHandler {
-	return &CheckSystemHandler{checkSystem: checkSystem}
+func NewCheckSystemHandler(checkSystemUseCase *usecase.CheckSystemUseCase) *CheckSystemHandler {
+	return &CheckSystemHandler{checkSystemUseCase: checkSystemUseCase}
 }
 
 func (h *CheckSystemHandler) CheckTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	// Получаем токен из запроса и обрабатываем его
-	var userToken string
-	userToken = r.Header.Get("user_token")
-
-	if len(userToken) == 0 {
-		helpers.Unauthorized(w)
+	if r.URL.Path != "/check_task" {
+		helpers.NotFound(w)
 		return
 	}
-	// валидируем его, получаем id пользователя
-	userId, err := h.userUseCase.ValidateToken(userToken) //вернется user_id или ошибка
-	if err != nil {
-		helpers.Unauthorized(w)
-	}
 
-	// получаем из запроса номер задачки и код исх.кода и проверяем их
-	rawData := models.CheckSystemRequestBody{}
-	err = json.NewDecoder(r.Body).Decode(&rawData)
+	helpers.InfoLogger.Println("CheckSystemHandler: CheckTask")
+	request := models.CheckTaskRequest{}
+	err := json.NewDecoder(r.Body).Decode(&request)
 
-	rawData.TaskId, err = h.checkSystem.CheckTaskIdAndLang(rawData.TaskId, rawData.CodeLang) //вернется номер задачи либо ошибка_not_found
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
 	}
 
-	// Получаем код задачки и отправляем все на тестирование
-	if len(rawData.SourceCode) == 0 {
-		helpers.ClientError(w, http.StatusBadRequest, "the code is missing")
-	}
-
-	// тестирование возвращает вердикт проверки
-	verdict, err := h.checkSystem.TestUserCode(rawData.SourceCode, rawData.CodeLang, rawData.TaskId, userId)
-
-	if err != nil {
-		helpers.ServerError(w, errors.New("Проблема с тестирующей системой"))
-		return
-	}
-
-	jsonResp, err := json.Marshal(verdict)
+	helpers.InfoLogger.Println("CheckSystemHandler: decode Success")
+	err = h.checkSystemUseCase.CheckTask(request.TaskID, request.Lang, request.Code)
 	if err != nil {
 		helpers.ServerError(w, err)
-	}
-	_, err = w.Write(jsonResp)
-	if err != nil {
-		helpers.ErrorLogger.Println(err)
+		return
 	}
 }

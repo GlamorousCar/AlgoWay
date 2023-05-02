@@ -52,7 +52,7 @@ func initServeMux(conn *pgx.Conn) *http.ServeMux {
 	taskRepository := repository.NewTaskRepositoryPostgres(conn)
 	taskUseCase := usecase.NewTaskUseCase(taskRepository)
 
-	checkSystemRepository := repository.NewCheckSystemRepositoryPostgres(conn)
+	checkSystemRepository := repository.NewCheckSystemRepoPostgres(conn)
 	checkSystemUseCase := usecase.NewCheckSystemUseCase(checkSystemRepository)
 
 	return newServeMux(

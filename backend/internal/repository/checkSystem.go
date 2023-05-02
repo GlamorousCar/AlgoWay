@@ -2,37 +2,45 @@ package repository
 
 import (
 	"context"
-	"errors"
-	"github.com/GlamorousCar/AlgoWay/internal/helpers"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 
-type CheckSystemRepository interface {
-	GetTask(id int) (int, error)
+type CheckSystemRepo interface {
+	GetTestData(taskID uint64) (*models.TestData, error)
 }
 
-type checkSystemRepositoryPostgres struct {
+type checkSystemRepoPostgres struct {
 	conn *pgx.Conn
 }
 
-func NewCheckSystemRepositoryPostgres(conn *pgx.Conn) *checkSystemRepositoryPostgres {
-	return &checkSystemRepositoryPostgres{conn: conn}
+func NewCheckSystemRepoPostgres(conn *pgx.Conn) *checkSystemRepoPostgres {
+	return &checkSystemRepoPostgres{conn: conn}
 }
 
-func (repo checkSystemRepositoryPostgres) GetTask(id int) (int, error) {
-	query := `SELECT * FROM task WHERE id = $1`
+func (repo *checkSystemRepoPostgres) GetTestData(taskID uint64) (*models.TestData, error) {
+	query := `SELECT input_data, output_data
+		FROM test_data
+		WHERE task_id=$1`
 
-	row := repo.conn.QueryRow(context.Background(), query, id)
-
-	var taskId int
-	err := row.Scan(&taskId)
-
+	rows, err := repo.conn.Query(context.Background(), query, taskID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return 0, helpers.ErrNoRecord
-		} else {
-			return 0, err
-		}
+		return nil, err
 	}
-	return taskId, nil
+
+	inputData := make([]string, 0)
+	outputData := make([]string, 0)
+
+	for rows.Next() {
+		var input, output string
+		err := rows.Scan(&input, &output)
+		if err != nil {
+			return nil, err
+		}
+
+		inputData = append(inputData, input)
+		outputData = append(outputData, output)
+	}
+
+	return &models.TestData{InputData: inputData, OutputData: outputData}, nil
 }

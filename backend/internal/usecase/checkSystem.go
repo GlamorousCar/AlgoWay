@@ -1,32 +1,36 @@
 package usecase
 
 import (
-	"errors"
-	"github.com/GlamorousCar/AlgoWay/internal/models"
+	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/repository"
+	"github.com/GlamorousCar/AlgoWay/internal/services/checkSystem"
 )
 
 type CheckSystemUseCase struct {
-	repo repository.CheckSystemRepository
+	checkSystemRepo repository.CheckSystemRepo
 }
 
-func NewCheckSystemUseCase(repo repository.CheckSystemRepository) *CheckSystemUseCase {
-	return &CheckSystemUseCase{repo: repo}
+func NewCheckSystemUseCase(checkSystemRepo repository.CheckSystemRepo) *CheckSystemUseCase {
+	return &CheckSystemUseCase{checkSystemRepo: checkSystemRepo}
 }
 
-func (u CheckSystemUseCase) CheckTaskIdAndLang(taskId int, lang string) (int, error) {
+func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string) error {
+	helpers.InfoLogger.Println("CheckSystemUseCase: CheckTask")
+	checkSystem, err := checkSystem.NewCheckSystem(lang)
 
-	if lang != "py" || lang != "go" {
-		return 0, errors.New("the language is not supported")
-	}
-	taskId, err := u.repo.GetTask(taskId)
+	helpers.InfoLogger.Println("CheckSystemUseCase: Getting test data")
+	testData, err := u.checkSystemRepo.GetTestData(taskID)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return taskId, nil
-}
+	helpers.InfoLogger.Println("CheckSystemUseCase: Writing code to file")
+	err = checkSystem.WriteCodeToFile(code)
+	if err != nil {
+		return err
+	}
 
-func (u CheckSystemUseCase) TestUserCode(sourceCode, codeLang string, taskID, userId int) (verdict models.Verdict, err error) {
-	return models.Verdict{"OK", "All test passed"}, nil
+	helpers.InfoLogger.Println("Running Tests")
+	err = checkSystem.RunTests(*testData)
+	return err
 }

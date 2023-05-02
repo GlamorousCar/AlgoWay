@@ -7,3 +7,9 @@ type Task struct {
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 }
+
+type CheckTaskRequest struct {
+	TaskID uint64 `json:"task_id"`
+	Lang   string `json:"lang"`
+	Code   string `json:"code"`
+}
