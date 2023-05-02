@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"errors"
+	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/GlamorousCar/AlgoWay/internal/repository"
-	"github.com/GlamorousCar/AlgoWay/internal/services"
 )
 
 type CheckSystemUseCase struct {
@@ -27,6 +27,6 @@ func (u CheckSystemUseCase) CheckTaskIdAndLang(taskId int, lang string) (int, er
 	return taskId, nil
 }
 
-func (u CheckSystemUseCase) TestUserCode(sourceCode, codeLang string, taskID, userId int) (verdict services.Verdict, err error) {
-	return services.Verdict{"OK", "All test passed"}, nil
+func (u CheckSystemUseCase) TestUserCode(sourceCode, codeLang string, taskID, userId int) (verdict models.Verdict, err error) {
+	return models.Verdict{"OK", "All test passed"}, nil
 }
