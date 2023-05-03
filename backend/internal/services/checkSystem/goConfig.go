@@ -9,5 +9,5 @@ func (c *goConfig) getExtension() string {
 }
 
 func (c *goConfig) getCMD() *exec.Cmd {
-	return exec.Command("go", "run", FileName)
+	return exec.Command("go", "run", filePath)
 }

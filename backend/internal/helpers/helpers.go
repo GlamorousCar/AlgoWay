@@ -27,3 +27,7 @@ func ClientError(w http.ResponseWriter, status int, errorText ...string) {
 func NotFound(w http.ResponseWriter) {
 	ClientError(w, http.StatusNotFound)
 }
+
+func Unauthorized(w http.ResponseWriter) {
+	ClientError(w, http.StatusUnauthorized)
+}
