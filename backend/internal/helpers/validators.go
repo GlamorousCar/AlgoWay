@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 )
 
@@ -24,12 +25,12 @@ func isEmpty(str string) bool {
 func ValidateLogin(login string) error {
 	if isEmpty(login) {
 		return errors.New("поле должно быть заполнено")
-		//"Пустое поле"
 	} else if len(login) < minLoginLen {
 		//	слишком короткое имя
-		return errors.New("логин должен состоять из не менее 5 символов")
+		errString := fmt.Sprintf("логин должен состоять из не менее %d символов", minLoginLen)
+		return errors.New(errString)
 	} else if !userRegexp.MatchString(login) {
-		return errors.New("Логин может состоять из символов латиницы, цифр и _ ")
+		return errors.New("логин может состоять из символов латиницы, цифр и _ ")
 		// логин должен состоять из букв цифр и нижнего подчеркивания
 	}
 	return nil

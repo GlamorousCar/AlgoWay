@@ -6,11 +6,11 @@ import (
 	"os/exec"
 )
 
-const FileName = "./tests"
+const filePath = "./temp"
 
 var configs = map[string]config{
-	"go":     &goConfig{},
-	"python": &pythonConfig{},
+	golang: &goConfig{},
+	python: &pythonConfig{},
 }
 
 type config interface {

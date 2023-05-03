@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"os"
 	"strings"
@@ -21,27 +22,27 @@ func NewCheckSystem(lang string) (*CheckSystem, error) {
 	return &CheckSystem{config: config}, nil
 }
 
-func (s *CheckSystem) WriteCodeToFile(code string) error {
-	fileName := fmt.Sprintf("./tests/code.%s", s.config.getExtension())
-	outfile, err := os.Create(fileName)
+func (s *CheckSystem) WriteCodeToFile(code string) (*os.File, error) {
+	fileName := fmt.Sprintf("%s/code.%s", filePath, s.config.getExtension())
+	codeFile, err := os.Create(fileName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = outfile.WriteString(code)
+	_, err = codeFile.WriteString(code)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return codeFile, nil
 }
 
-func (s *CheckSystem) RunTests(testData models.TestData) error {
-	cmd := s.config.getCMD()
-
+func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error) {
 	if len(testData.InputData) != len(testData.OutputData) {
-		return errors.New("len(testData.InputData) != len(testData.OutputData)")
+		return nil, errors.New("len(testData.InputData) != len(testData.OutputData)")
 	}
+
+	cmd := s.config.getCMD()
 
 	testCnt := len(testData.InputData)
 	for i := 0; i < testCnt; i++ {
@@ -54,24 +55,31 @@ func (s *CheckSystem) RunTests(testData models.TestData) error {
 
 		err := cmd.Run()
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		isRight := s.check(codeResult.String(), testData.OutputData[i])
-		fmt.Println(isRight)
+
+		if !isRight {
+			return &models.Verdict{
+				Abbr:  "WA",
+				Title: "Wrong Answer",
+			}, nil
+		}
+		helpers.InfoLogger.Printf("RunTests: %t ", isRight)
 	}
 
-	return nil
+	return &models.Verdict{Abbr: "OK", Title: "All test passed"}, nil
 }
 
 func (s *CheckSystem) check(codeResult string, output string) bool {
-	codeResult = strings.Map(deleteShitSymbols, codeResult)
-	output = strings.Map(deleteShitSymbols, output)
+	codeResult = strings.Map(filterBadSymbol, codeResult)
+	output = strings.Map(filterBadSymbol, output)
 
 	return codeResult == output
 }
 
-func deleteShitSymbols(r rune) rune {
+func filterBadSymbol(r rune) rune {
 	if r >= 0x20 && r <= 0x7e {
 		return r
 	}

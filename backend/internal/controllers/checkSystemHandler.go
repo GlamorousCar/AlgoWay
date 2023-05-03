@@ -13,8 +13,14 @@ type CheckSystemHandler struct {
 	checkSystemUseCase *usecase.CheckSystemUseCase
 }
 
-func NewCheckSystemHandler(checkSystemUseCase *usecase.CheckSystemUseCase) *CheckSystemHandler {
-	return &CheckSystemHandler{checkSystemUseCase: checkSystemUseCase}
+func NewCheckSystemHandler(
+	userUseCase *usecase.UserUseCase,
+	checkSystemUseCase *usecase.CheckSystemUseCase,
+) *CheckSystemHandler {
+	return &CheckSystemHandler{
+		userUseCase:        userUseCase,
+		checkSystemUseCase: checkSystemUseCase,
+	}
 }
 
 func (h *CheckSystemHandler) CheckTask(w http.ResponseWriter, r *http.Request) {
@@ -22,20 +28,47 @@ func (h *CheckSystemHandler) CheckTask(w http.ResponseWriter, r *http.Request) {
 		helpers.NotFound(w)
 		return
 	}
-
 	helpers.InfoLogger.Println("CheckSystemHandler: CheckTask")
+
+	w.Header().Set("Content-Type", "application/json")
+
+	userToken := r.Header.Get("user_token")
+	if len(userToken) == 0 {
+		helpers.Unauthorized(w)
+		return
+	}
+
+	// валидируем его, получаем id пользователя
+	userId, err := h.userUseCase.ValidateToken(userToken) //вернется user_id или ошибка
+	if err != nil {
+		helpers.Unauthorized(w)
+	}
+
 	request := models.CheckTaskRequest{}
-	err := json.NewDecoder(r.Body).Decode(&request)
+	err = json.NewDecoder(r.Body).Decode(&request)
 
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
 	}
 
+	if len(request.SourceCode) == 0 {
+		helpers.ClientError(w, http.StatusBadRequest, "The code is missing")
+	}
+
 	helpers.InfoLogger.Println("CheckSystemHandler: decode Success")
-	err = h.checkSystemUseCase.CheckTask(request.TaskID, request.Lang, request.Code)
+	verdict, err := h.checkSystemUseCase.CheckTask(request.TaskID, request.Lang, request.SourceCode, userId)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
+	}
+
+	jsonResp, err := json.Marshal(verdict)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+	_, err = w.Write(jsonResp)
+	if err != nil {
+		helpers.ErrorLogger.Println(err)
 	}
 }
