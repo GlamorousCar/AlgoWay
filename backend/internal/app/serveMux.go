@@ -23,7 +23,7 @@ func newServeMux(
 	authHandler := controllers.NewAuthHandler(userUseCase)
 	themeMenuHandler := controllers.NewThemeMenuHandler(themeMenuUseCase)
 	taskHandler := controllers.NewTaskHandler(taskUseCase)
-	checkSystemHandler := controllers.NewCheckSystemHandler(checkSystemUseCase)
+	checkSystemHandler := controllers.NewCheckSystemHandler(userUseCase, checkSystemUseCase)
 
 	mux.HandleFunc("/", homeHandler.Home)
 	mux.HandleFunc("/themes/menu", themeMenuHandler.GetThemeMenu)
