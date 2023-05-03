@@ -40,10 +40,13 @@ func (repo *userRepositoryPostgres) CheckIfUserExists(user models.RawUser) error
 	err := row.Scan(&login, &email)
 
 	if err == nil {
-		return errors.New("пользователь уже существует") //Дальше регистрировать нельзя
-	} else {
-		return nil
+		if login == user.Login {
+			return errors.New("пользователь с таким логином уже существует") //Дальше регистрировать нельзя
+		} else if email == user.Email {
+			return errors.New("пользователь с такой почтой уже существует") //Дальше регистрировать нельзя
+		}
 	}
+	return nil
 }
 
 // Login Returns hashPass and error
