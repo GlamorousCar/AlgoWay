@@ -31,7 +31,7 @@ func newServeMux(
 	mux.HandleFunc("/task", taskHandler.GetAlgorithmTasks)
 	mux.HandleFunc("/auth/register", authHandler.RegisterUser)
 	mux.HandleFunc("/auth/login", authHandler.LoginUser)
-	mux.HandleFunc("/check_code", checkSystemHandler.CheckTask)
+	mux.HandleFunc("/check_task", checkSystemHandler.CheckTask)
 
 	return mux
 }
