@@ -11,9 +11,9 @@ const Drawer = () => {
     const drawerStatus = useSelector((state: IAppState) => state.drawerOpeningStatus);
     const dispatch = useDispatch();
 
-    const duration = 300;
+    const duration = 30000;
     const defaultStyles = {
-        transition: `opacity ${duration}ms ease-in-out`,
+        transition: `opacity ${duration}ms ease-in`,
         opacity: 0
     }
 
@@ -36,6 +36,7 @@ const Drawer = () => {
                     <div className="exit-icon-block">
                         <img onClick={() => dispatch(drawerClosing())} src={Exit} alt="exit icon"/>
                     </div>
+                    <h4 className={"exit-icon-title"}>Алгоритмы</h4>
                     <ul className={"theme-list"}>
                         <ThemesList />
                     </ul>

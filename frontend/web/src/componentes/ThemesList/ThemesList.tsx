@@ -1,8 +1,8 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
-import {IMenu} from "../../types/types";
 import {useSelector} from "react-redux";
 import {IAppState} from "../../types/store";
+import './ThemesList.scss'
 
 const ThemesList = () => {
     const {menu} = useSelector((state: IAppState) => state);
