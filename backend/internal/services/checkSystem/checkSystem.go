@@ -79,6 +79,7 @@ func (s *CheckSystem) check(codeResult string, output string) bool {
 	return codeResult == output
 }
 
+// Checks if symbol utf-8 code between 20 and 7E - english letters numbers and some special symbols
 func filterBadSymbol(r rune) rune {
 	if r >= 0x20 && r <= 0x7e {
 		return r
