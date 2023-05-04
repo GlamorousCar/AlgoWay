@@ -23,7 +23,9 @@ function App() {
 
 
     useEffect(() => {
+        console.log("получение данных ")
         getResources();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
