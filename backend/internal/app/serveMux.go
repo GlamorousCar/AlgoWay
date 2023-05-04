@@ -14,6 +14,7 @@ func newServeMux(
 	userUseCase *usecase.UserUseCase,
 	themeMenuUseCase *usecase.ThemeMenuUseCase,
 	taskUseCase *usecase.TaskUseCase,
+	checkSystemUseCase *usecase.CheckSystemUseCase,
 ) *http.ServeMux {
 	mux := http.NewServeMux()
 
@@ -22,6 +23,7 @@ func newServeMux(
 	authHandler := controllers.NewAuthHandler(userUseCase)
 	themeMenuHandler := controllers.NewThemeMenuHandler(themeMenuUseCase)
 	taskHandler := controllers.NewTaskHandler(taskUseCase)
+	checkSystemHandler := controllers.NewCheckSystemHandler(userUseCase, checkSystemUseCase)
 
 	mux.HandleFunc("/", homeHandler.Home)
 	mux.HandleFunc("/themes/menu", themeMenuHandler.GetThemeMenu)
@@ -29,6 +31,7 @@ func newServeMux(
 	mux.HandleFunc("/task", taskHandler.GetAlgorithmTasks)
 	mux.HandleFunc("/auth/register", authHandler.RegisterUser)
 	mux.HandleFunc("/auth/login", authHandler.LoginUser)
+	mux.HandleFunc("/check_task", checkSystemHandler.CheckTask)
 
 	return mux
 }
@@ -49,11 +52,15 @@ func initServeMux(conn *pgx.Conn) *http.ServeMux {
 	taskRepository := repository.NewTaskRepositoryPostgres(conn)
 	taskUseCase := usecase.NewTaskUseCase(taskRepository)
 
+	checkSystemRepository := repository.NewCheckSystemRepoPostgres(conn)
+	checkSystemUseCase := usecase.NewCheckSystemUseCase(checkSystemRepository)
+
 	return newServeMux(
 		algorithmTheoryUseCase,
 		homeUseCase,
 		userUseCase,
 		themeMenuUseCase,
 		taskUseCase,
+		checkSystemUseCase,
 	)
 }
