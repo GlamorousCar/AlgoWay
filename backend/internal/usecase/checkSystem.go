@@ -1,32 +1,51 @@
 package usecase
 
 import (
-	"errors"
+	"github.com/GlamorousCar/AlgoWay/internal/helpers"
 	"github.com/GlamorousCar/AlgoWay/internal/models"
 	"github.com/GlamorousCar/AlgoWay/internal/repository"
+	"github.com/GlamorousCar/AlgoWay/internal/services/checkSystem"
 )
 
 type CheckSystemUseCase struct {
-	repo repository.CheckSystemRepository
+	checkSystemRepo repository.CheckSystemRepo
 }
 
-func NewCheckSystemUseCase(repo repository.CheckSystemRepository) *CheckSystemUseCase {
-	return &CheckSystemUseCase{repo: repo}
+func NewCheckSystemUseCase(checkSystemRepo repository.CheckSystemRepo) *CheckSystemUseCase {
+	return &CheckSystemUseCase{checkSystemRepo: checkSystemRepo}
 }
 
-func (u CheckSystemUseCase) CheckTaskIdAndLang(taskId int, lang string) (int, error) {
-
-	if lang != "py" || lang != "go" {
-		return 0, errors.New("the language is not supported")
-	}
-	taskId, err := u.repo.GetTask(taskId)
+// CheckTask TODO userId сейчас не используется, он нужен будет в дальнейшем при сохранении вердикта
+func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string, userId int) (*models.Verdict, error) {
+	helpers.InfoLogger.Println("CheckSystemUseCase: CheckTask")
+	checkSystem, err := checkSystem.NewCheckSystem(lang)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return taskId, nil
-}
+	helpers.InfoLogger.Println("CheckSystemUseCase: Getting test data")
+	testData, err := u.checkSystemRepo.GetTestData(taskID)
+	if err != nil {
+		return nil, err
+	}
 
-func (u CheckSystemUseCase) TestUserCode(sourceCode, codeLang string, taskID, userId int) (verdict models.Verdict, err error) {
-	return models.Verdict{"OK", "All test passed"}, nil
+	helpers.InfoLogger.Println("CheckSystemUseCase: Writing code to file")
+	codeFile, err := checkSystem.WriteCodeToFile(code)
+	if err != nil {
+		return nil, err
+	}
+
+	helpers.InfoLogger.Println("CheckTask: Running Tests")
+	// TODO сделать сохранение результата в БД
+	// TODO Сделать обработку ошибок WA (Wrong Answer), CE (Compilation Error), TL (Time Limit) и мб PE (Presentatiom Error)
+	verdict, err := checkSystem.RunTests(*testData)
+	if err != nil {
+		return nil, err
+	}
+
+	err = codeFile.Close()
+	if err != nil {
+		panic(err)
+	}
+	return verdict, nil
 }

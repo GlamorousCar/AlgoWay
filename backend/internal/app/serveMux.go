@@ -23,7 +23,7 @@ func newServeMux(
 	authHandler := controllers.NewAuthHandler(userUseCase)
 	themeMenuHandler := controllers.NewThemeMenuHandler(themeMenuUseCase)
 	taskHandler := controllers.NewTaskHandler(taskUseCase)
-	checkSystemHandler := controllers.NewCheckSystemHandler(checkSystemUseCase)
+	checkSystemHandler := controllers.NewCheckSystemHandler(userUseCase, checkSystemUseCase)
 
 	mux.HandleFunc("/", homeHandler.Home)
 	mux.HandleFunc("/themes/menu", themeMenuHandler.GetThemeMenu)
@@ -52,7 +52,7 @@ func initServeMux(conn *pgx.Conn) *http.ServeMux {
 	taskRepository := repository.NewTaskRepositoryPostgres(conn)
 	taskUseCase := usecase.NewTaskUseCase(taskRepository)
 
-	checkSystemRepository := repository.NewCheckSystemRepositoryPostgres(conn)
+	checkSystemRepository := repository.NewCheckSystemRepoPostgres(conn)
 	checkSystemUseCase := usecase.NewCheckSystemUseCase(checkSystemRepository)
 
 	return newServeMux(

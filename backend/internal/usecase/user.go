@@ -84,6 +84,7 @@ func generateToken(user models.LoginUser) (string, error) {
 	return token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 }
 
+// ValidateToken parseToken По токену получает id пользователя
 func (u *UserUseCase) ValidateToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &models.TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

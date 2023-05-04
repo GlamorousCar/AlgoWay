@@ -27,6 +27,8 @@ func RunServer() {
 	infoLogger := helpers.InfoLogger
 	errorLogger := helpers.ErrorLogger
 
+	os.Mkdir("temp", 0755)
+
 	port := os.Getenv("PORT")
 
 	// Проверка, что переменная окружения была найдена
