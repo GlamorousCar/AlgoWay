@@ -15,6 +15,16 @@ func NewThemeMenuHandler(themeMenuUseCase *usecase.ThemeMenuUseCase) *ThemeMenuH
 	return &ThemeMenuHandler{themeMenuUseCase: themeMenuUseCase}
 }
 
+// GetThemeMenu  godoc
+//
+//	@Summary		Меню сайта
+//	@Description	Получение всех тем и подтем меню сайта
+//	@Tags			main
+//	@Accept			json
+//	@Success		200	{array} models.ThemeMenu "Возвращаются темы и подтемы"
+//	@Failure		404
+//	@Failure		500
+//	@Router			/themes/menu [get]
 func (h *ThemeMenuHandler) GetThemeMenu(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/themes/menu" {
 		helpers.NotFound(w)
