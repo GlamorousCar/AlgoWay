@@ -4,13 +4,20 @@ import Google from "../../images/GoogleLogo.svg";
 import GitHub from "../../images/GitHub.svg";
 import {NavLink} from "react-router-dom";
 import UseAuthService from "../../services/UseAuthService";
+import spinner from "../Spinners/Spinner";
+import LoadingSpinner from "../Spinners/LoadingSpinner";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+
     const {login} = UseAuthService();
 
+    const spinner = loading ? <LoadingSpinner/>:null;
+    const errorMessage = error ? <span className={'login-error-message'}>{error}</span> :null;
     return (
         <>
             <div className="login-form">
@@ -30,12 +37,34 @@ const LoginForm = () => {
                     />
                     <button className={"button"} onClick={ (e)=> {
                         e.preventDefault();
+                        setError('');
+                        setLoading(true);
                         login(email, password)
                             .then(response => {
-                                console.log(response.token)
+                                localStorage.setItem("token",response.token);
+                                setLoading(false);
                             })
-                            .catch(response=> console.log(response.response?.data, response));
+                            .catch(response=> {
+                                console.log(response)
+                                setLoading(false);
+                                if(response.response.status === 400){
+                                    if (response.response.data === "no rows in result set\n"){
+                                        setError('Введете данные для входа')
+                                    }
+                                    if (response.response.data === "crypto/bcrypt: hashedPassword is not the hash of the given password\n"){
+                                        setError('Введены неверный логин или пароль')
+                                    }
+                                }else {
+                                    setError('Ошибка сервера')
+                                }
+
+                            });
                     }} >Войти</button>
+                    <div className="result-block">
+                        {spinner}
+                        {errorMessage}
+                    </div>
+
                 </form>
                 <div className="alternative-block">
                     <div className="other-choices">

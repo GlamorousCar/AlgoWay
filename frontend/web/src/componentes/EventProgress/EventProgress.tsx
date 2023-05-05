@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import "./EventProgress.scss"
-import Spinner from '../Spinner/Spinner';
+import Spinner from '../Spinners/Spinner';
 
 interface EventProps {
     total:number,
