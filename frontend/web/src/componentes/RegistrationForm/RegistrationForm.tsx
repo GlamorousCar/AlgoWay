@@ -37,7 +37,7 @@ const RegistrationForm = () => {
                 <button className={"button"} onClick={ (event) => {
                     event.preventDefault()
                     registration(username, email, password)
-                        .then(response => console.log(response.response))
+                        .then(response => console.log(response))
                         .catch(response=> console.log(response.response?.data, response));
                 }}>
                     Создать аккаунт

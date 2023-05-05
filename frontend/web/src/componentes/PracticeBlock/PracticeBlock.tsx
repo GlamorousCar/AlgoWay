@@ -14,7 +14,7 @@ const PracticeBlock = () => {
 
     const {getAlgorithmTasks} = useAlgoService();
 
-    console.log(algorithmId, tasks);
+
 
     useEffect(() => {
         getResources(Number(algorithmId));
@@ -29,10 +29,12 @@ const PracticeBlock = () => {
 
     const onTasksLoaded = (tasks: ITask[]) => {
         setTasks(tasks);
+        console.log(algorithmId, tasks);
     }
 
 
     function handleChange(value: string) {
+        console.log(value)
         localStorage.setItem('solution', value);
         setSolution(value);
     }

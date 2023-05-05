@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import "./LoginForm.scss"
 import Google from "../../images/GoogleLogo.svg";
 import GitHub from "../../images/GitHub.svg";
-import {NavLink} from "react-router-dom";
+import {Navigate, NavLink, useNavigate} from "react-router-dom";
 import UseAuthService from "../../services/UseAuthService";
 import spinner from "../Spinners/Spinner";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
+import {setAuthTrue} from "../../store/actions";
+import {useDispatch} from "react-redux";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
@@ -15,6 +17,8 @@ const LoginForm = () => {
     const [error, setError] = useState<string>('');
 
     const {login} = UseAuthService();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const spinner = loading ? <LoadingSpinner/>:null;
     const errorMessage = error ? <span className={'login-error-message'}>{error}</span> :null;
@@ -43,6 +47,8 @@ const LoginForm = () => {
                             .then(response => {
                                 localStorage.setItem("token",response.token);
                                 setLoading(false);
+                                dispatch(setAuthTrue());
+                                navigate('/');
                             })
                             .catch(response=> {
                                 console.log(response)
