@@ -16,6 +16,19 @@ func NewAuthHandler(userUseCase *usecase.UserUseCase) *AuthHandler {
 	return &AuthHandler{userUseCase: userUseCase}
 }
 
+// RegisterUser auth godoc
+//
+//		    @Summary		регистрация пользователя
+//	     @Description	после успешной регистрации возвращается сообщение об успешном выполнении
+//		    @Tags			auth
+//		    @Accept			json
+//		    @Produce		plain
+//			@Param			message body		models.RawUser	true "User Info"
+//		    @Success		200	{string} 3 Регистрация прошла успешно
+//		    @Failure		400
+//		    @Failure		404
+//		    @Failure		500
+//		    @Router			/auth/register [post]
 func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/register" {
 		helpers.NotFound(w)
@@ -49,6 +62,19 @@ func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// LoginUser auth godoc
+//
+//		@Summary		авторизация пользователя
+//		@Description	после успешной авторизации возвращается токен
+//		@Tags			auth
+//		@Accept			json
+//		@Produce		plain
+//		@Param			message body		models.LoginUser	true "Account Info"
+//	    @Success		200	{object} models.Token
+//	    @Failure		400
+//	    @Failure		404
+//	    @Failure		500
+//	    @Router			/auth/login [post]
 func (h *AuthHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/auth/login" {
 		helpers.NotFound(w)
@@ -76,11 +102,11 @@ func (h *AuthHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, err)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(jsonResp)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
 
 }
