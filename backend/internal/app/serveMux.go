@@ -5,6 +5,7 @@ import (
 	"github.com/GlamorousCar/AlgoWay/internal/repository"
 	"github.com/GlamorousCar/AlgoWay/internal/usecase"
 	"github.com/jackc/pgx/v4"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
 )
 
@@ -32,6 +33,7 @@ func newServeMux(
 	mux.HandleFunc("/auth/register", authHandler.RegisterUser)
 	mux.HandleFunc("/auth/login", authHandler.LoginUser)
 	mux.HandleFunc("/check_task", checkSystemHandler.CheckTask)
+	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
 	return mux
 }
