@@ -23,6 +23,21 @@ func NewCheckSystemHandler(
 	}
 }
 
+// CheckTask checkSystem godoc
+//
+//	        @Summary		Проверка решения
+//		    @Description	Проверяет пользовательское решение какой-либо задачи
+//		    @Tags			check_system
+//		    @Accept			json
+//			@Produce		plain
+//			@Param		    user_token header	string	true "Токен авторизации"
+//			@Param			message body		models.CheckTaskRequest	true "Solution info"
+//		    @Success		200	{object} models.Verdict
+//		    @Failure		400
+//		    @Failure		401
+//		    @Failure		404
+//		    @Failure		500
+//		@Router			/check_task [post]
 func (h *CheckSystemHandler) CheckTask(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/check_task" {
 		helpers.NotFound(w)
