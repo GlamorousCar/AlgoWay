@@ -7,4 +7,5 @@ export interface IAppState {
     menu : IMenu[];
     algorithms:IAlgorithm[];
     isAuth:boolean;
+    menuLoading:boolean;
 }

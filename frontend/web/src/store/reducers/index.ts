@@ -6,6 +6,7 @@ const initialState = {
     menu:[],
     algorithms:[],
     isAuth:false,
+    menuLoading:true
 }
 
 const reducer = (state:IAppState = initialState,action:any): IAppState  => {
@@ -16,6 +17,10 @@ const reducer = (state:IAppState = initialState,action:any): IAppState  => {
             return {...state, drawerOpeningStatus: false}
         case "SET_MENU":
             return {...state, menu:action.payload }
+        case "MENU_FETCHING":
+            return {...state, menuLoading:true }
+        case "MENU_FETCHED":
+            return {...state, menuLoading:false }
         case "SET_AUTH_TRUE":
             return {...state, isAuth: true}
         case "SET_AUTH_FALSE":

@@ -17,6 +17,16 @@ export const setMenuItems = (menus:IMenu[]) =>{
         payload:menus
     }
 }
+export const menuLoading = ()=>{
+    return{
+        type:"MENU_FETCHING"
+    }
+}
+export const menuLoaded = ()=>{
+    return{
+        type:"MENU_FETCHED"
+    }
+}
 export const setAuthTrue = () =>{
     return{
         type:"SET_AUTH_TRUE"
