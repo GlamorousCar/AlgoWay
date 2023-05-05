@@ -8,7 +8,7 @@ import MainContentPage from "../../Pages/MainContentPage/MainContentPage";
 import TheoryBlock from "../TheoryBlock/TheoryBlock";
 import PracticeBlock from "../PracticeBlock/PracticeBlock";
 import useAlgoService from "../../services/UseAlgoService";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {IMenu} from "../../types/types";
 import {useDispatch} from "react-redux";
 import {setMenuItems} from "../../store/actions";
@@ -23,7 +23,7 @@ function App() {
 
 
     useEffect(() => {
-        console.log("получение данных ")
+
         getResources();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,6 +34,11 @@ function App() {
     }
 
     const onMenuLoaded = (menuList: IMenu[]) => {
+        console.log("получение данных ")
+        console.log(menuList)
+        if(menuList.length === 0){
+            getResources();
+        }
         dispatch(setMenuItems(menuList));
     }
     return (

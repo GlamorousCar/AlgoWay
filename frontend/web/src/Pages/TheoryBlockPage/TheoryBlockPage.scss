@@ -9,7 +9,8 @@
   width:100%;
   .container {
     padding: 0 30px 20px 50px;
-    height: 70vh;
+    height: 71.5vh;
+    overflow: scroll;
     .algorithm-title{
       font-weight: 700;
       font-size: 40px;
@@ -73,12 +74,8 @@
       flex-direction: column;
       align-items: flex-start;
       padding: 0;
-      gap: 30px;
-
+      max-height: 800px;
       min-height: 150px;
-      flex: none;
-      order: 0;
-      flex-grow: 0;
 
       .bold {
         color: $white-color-selected;
