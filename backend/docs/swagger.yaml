@@ -1,0 +1,272 @@
+basePath: /
+definitions:
+  models.Algorithm:
+    properties:
+      algorithm_id:
+        type: integer
+      description:
+        type: string
+      position:
+        type: integer
+      theme_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.AlgorithmTheory:
+    properties:
+      content:
+        example: "#Ligula. Vivamus nec ultrices. Himenaeos. \n Semper lorem volutpat
+          urna at. Tincidunt purus vulputate neque velit senectus. Convallis hendrerit."
+        type: string
+      id:
+        example: 4
+        type: integer
+      title:
+        example: civil
+        type: string
+    type: object
+  models.CheckTaskRequest:
+    properties:
+      lang:
+        type: string
+      source_code:
+        type: string
+      task_id:
+        type: integer
+    type: object
+  models.LoginUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.RawUser:
+    properties:
+      email:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  models.Task:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      is_solved:
+        type: boolean
+      title:
+        type: string
+    type: object
+  models.ThemeMenu:
+    properties:
+      algorithms:
+        items:
+          $ref: '#/definitions/models.Algorithm'
+        type: array
+      position:
+        type: integer
+      theme_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.Token:
+    properties:
+      token:
+        type: string
+    type: object
+  models.Verdict:
+    properties:
+      abbr:
+        type: string
+      title:
+        type: string
+    type: object
+host: 127.0.0.1:4000
+info:
+  contact: {}
+  description: Документация для нашего студенческого проекта - сервиса для изучения
+    алгоритмов
+  title: Swagger Algoway API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Страница с проверкой подключения к бд (тестовая)
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Успешное подключение -  версия базы данных
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Главная страница
+      tags:
+      - main
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: после успешной авторизации возвращается токен
+      parameters:
+      - description: Account Info
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginUser'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Token'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: авторизация пользователя
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: после успешной регистрации возвращается сообщение об успешном выполнении
+      parameters:
+      - description: User Info
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.RawUser'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: регистрация пользователя
+      tags:
+      - auth
+  /check_task:
+    post:
+      consumes:
+      - application/json
+      description: Проверяет пользовательское решение какой-либо задачи
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: user_token
+        required: true
+        type: string
+      - description: Solution info
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.CheckTaskRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Verdict'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Проверка решения
+      tags:
+      - check_system
+  /task:
+    get:
+      consumes:
+      - application/json
+      description: Получение заданий к определенному алгоритму. Пока есть ошибка связанная
+        с возвращаемым полем is_solved, будет исправлено скоро
+      parameters:
+      - description: Получение задач по id алгоритма
+        in: query
+        name: algo_id
+        type: string
+      responses:
+        "200":
+          description: Возвращается список задач
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Список задач по алгоритму
+      tags:
+      - main
+  /themes/menu:
+    get:
+      consumes:
+      - application/json
+      description: Получение всех тем и подтем меню сайта
+      responses:
+        "200":
+          description: Возвращаются темы и подтемы
+          schema:
+            items:
+              $ref: '#/definitions/models.ThemeMenu'
+            type: array
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Меню сайта
+      tags:
+      - main
+  /theory:
+    get:
+      consumes:
+      - application/json
+      description: Получение теории к алгоритму по его id
+      parameters:
+      - description: Получение задачи по id алгоритма
+        in: query
+        name: algo_id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AlgorithmTheory'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Теория к алгоритму
+      tags:
+      - main
+swagger: "2.0"

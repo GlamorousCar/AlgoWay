@@ -17,6 +17,17 @@ func NewAlgoTheoryHandler(algoTheoryUseCase *usecase.AlgorithmTheoryUseCase) *Al
 	return &AlgoTheoryHandler{algoTheoryUseCase: algoTheoryUseCase}
 }
 
+// GetAlgorithmTheory Home godoc
+//
+//		@Summary		Теория к алгоритму
+//		@Description	Получение теории к алгоритму по его id
+//		@Tags			main
+//		@Accept			json
+//		@Success 200 {object} models.AlgorithmTheory
+//		@Failure 404
+//		@Failure 500
+//	    @Param        algo_id   query     string _  "Получение задачи по id алгоритма"
+//	    @Router			/theory [get]
 func (h *AlgoTheoryHandler) GetAlgorithmTheory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	id, err := strconv.Atoi(r.URL.Query().Get(algorithmId))

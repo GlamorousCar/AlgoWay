@@ -15,6 +15,16 @@ func NewHomeHandler(homeUseCase *usecase.HomeUseCase) *HomeHandler {
 	return &HomeHandler{homeUseCase: homeUseCase}
 }
 
+// Home godoc
+//
+//	@Summary		Главная страница
+//	@Description	Страница с проверкой подключения к бд (тестовая)
+//	@Tags			main
+//	@Accept			json
+//	@Produce		plain
+//	@Success		200	{string}	string	"Успешное подключение -  версия базы данных"
+//	@Failure		500	{string}	string	"Internal server error"
+//	@Router			/ [get]
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		helpers.NotFound(w)
