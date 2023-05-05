@@ -6,9 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {drawerClosing} from "../../store/actions";
 import {IAppState} from "../../types/store";
 import ThemesList from "../ThemesList/ThemesList";
+import {Skeleton} from "@mui/material";
+import SkeletonList from "../skeletonList/SkeletonList";
 
 const Drawer = () => {
-    const drawerStatus = useSelector((state: IAppState) => state.drawerOpeningStatus);
+    const {drawerOpeningStatus, menuLoading } = useSelector((state: IAppState) => state);
     const dispatch = useDispatch();
 
     const duration = 30000;
@@ -29,7 +31,7 @@ const Drawer = () => {
     }
 
     return (
-        <Transition in={drawerStatus} timeout={duration} unmountOnExit onEnter={onEnterHandler}>
+        <Transition in={drawerOpeningStatus} timeout={duration} unmountOnExit onEnter={onEnterHandler}>
             {state => (
                 <div className={'drawer'}
                      style={{...defaultStyles, ...transitionStyles[state as keyof typeof transitionStyles]}}>
@@ -38,7 +40,7 @@ const Drawer = () => {
                     </div>
                     <h4 className={"exit-icon-title"}>Алгоритмы</h4>
                     <ul className={"theme-list"}>
-                        <ThemesList />
+                        {menuLoading?<SkeletonList/>:<ThemesList />}
                     </ul>
                 </div>
             )}

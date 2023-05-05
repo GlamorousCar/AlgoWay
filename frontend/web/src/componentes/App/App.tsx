@@ -11,7 +11,7 @@ import useAlgoService from "../../services/UseAlgoService";
 import {useEffect} from "react";
 import {IMenu} from "../../types/types";
 import {useDispatch} from "react-redux";
-import {setMenuItems} from "../../store/actions";
+import {menuLoaded, menuLoading, setMenuItems} from "../../store/actions";
 import LoginForm from "../LoginForm/LoginForm";
 import RegistrationForm from "../RegistrationForm/RegistrationForm";
 
@@ -30,7 +30,8 @@ function App() {
     }, []);
 
     const getResources = () => {
-        getMenuTopics().then(onMenuLoaded);
+        dispatch(menuLoading());
+        getMenuTopics().then(onMenuLoaded).catch(getResources);
     }
 
     const onMenuLoaded = (menuList: IMenu[]) => {
@@ -38,8 +39,11 @@ function App() {
         console.log(menuList)
         if(menuList.length === 0){
             getResources();
+        }else{
+            dispatch(menuLoaded());
+            dispatch(setMenuItems(menuList));
         }
-        dispatch(setMenuItems(menuList));
+
     }
     return (
         <Router>
