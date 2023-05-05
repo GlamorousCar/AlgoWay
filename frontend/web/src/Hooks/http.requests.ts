@@ -1,15 +1,21 @@
 import axios from "axios";
+import {useCallback} from "react";
+
+const UseHttpRequestHook = ( )=>{
+    const getRequest = useCallback(async (url:string, data:object) => {
+        try {
+            const response = await axios.post(url, data);
+            if (response.statusText !== "OK") {
+                throw new Error(`Couldn't fetch ${url}, status : ${response.status} `)
+            }
+            return response.data;
+        } catch (e) {
+            throw e;
+        }
+    }, [])
 
 
-export const _baseUrl = "https://bbaunqpcv1t23s9skmhv.containers.yandexcloud.net" ;
-const $api = axios.create({
-    baseURL:_baseUrl,
-})
+    return {getRequest}
+}
 
-$api.interceptors.request.use((config) =>{
-    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
-     config.headers.post["Access-Control-Allow-Origin"] = '*';
-    return config;
-})
-
-export default $api
+export default UseHttpRequestHook;

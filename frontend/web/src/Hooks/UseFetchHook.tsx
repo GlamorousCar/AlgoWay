@@ -8,7 +8,6 @@ const UseFetchHook = () => {
     const getRequest = useCallback(async (url: string) => {
         try {
             const response = await axios.get(url);
-            console.log(response);
             if (response.statusText !== "OK") {
                 throw new Error(`Couldn't fetch ${url}, status : ${response.status} `)
             }

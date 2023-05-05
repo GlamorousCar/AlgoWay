@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
-import {login} from "../../store/actions";
 import "./LoginForm.scss"
 import Google from "../../images/GoogleLogo.svg";
 import GitHub from "../../images/GitHub.svg";
 import {NavLink} from "react-router-dom";
+import UseAuthService from "../../services/UseAuthService";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const {login} = UseAuthService();
 
     return (
         <>
@@ -26,7 +28,14 @@ const LoginForm = () => {
                            name="password"
                            placeholder={"Password"}
                     />
-                    <button className={"button"} onClick={ ()=>login(email,password)} >Войти</button>
+                    <button className={"button"} onClick={ (e)=> {
+                        e.preventDefault();
+                        login(email, password)
+                            .then(response => {
+                                console.log(response.token)
+                            })
+                            .catch(response=> console.log(response.response?.data, response));
+                    }} >Войти</button>
                 </form>
                 <div className="alternative-block">
                     <div className="other-choices">
