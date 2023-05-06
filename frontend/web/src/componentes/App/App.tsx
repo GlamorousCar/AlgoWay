@@ -54,8 +54,8 @@ function App() {
                         <Route  path={"/registration"} element={<RegistrationForm/>}/>
                     </Route>
                     <Route element={<ContentBlock/>}>
-                        <Route path={"/topics"} element={<MainContentPage/>}/>
-                        <Route path={"/topics/:algorithmId"} element={<TheoryBlockPage/>}>
+                        <Route path={"/topics/:topicId"} element={<MainContentPage/>}/>
+                        <Route path={"/topics/:topicId/:algorithmId"} element={<TheoryBlockPage/>}>
                             <Route index path={'theory'} element={<TheoryBlock/>}/>
                             <Route path={'practice'} element={<PracticeBlock/>}/>
                         </Route>
