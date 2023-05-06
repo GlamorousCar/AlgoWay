@@ -85,7 +85,7 @@ const PracticeBlock = () => {
                         value={localStorage.getItem('solution')!} onChange={(e) => handleChange(e.target.value)}
                         className="code-input"
                         rows={rows}
-                        cols={10}/>
+                        cols={13}/>
                 </div>
             </div>
         </div>
