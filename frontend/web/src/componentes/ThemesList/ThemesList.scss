@@ -23,11 +23,10 @@
     color: $no-active-color;
     list-style: none;
     padding: 5px;
-    margin: 8px 0;
+    margin:0;
     text-decoration: none;
   }
   .second-layer-list{
-    margin-top: 13px;
     .second-layer-list-item{
       list-style-type: disc;
       color: $no-active-color;
