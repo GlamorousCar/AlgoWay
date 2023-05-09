@@ -62,6 +62,7 @@ func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error
 
 		if !isRight {
 			return &models.Verdict{
+				ID:    2,
 				Abbr:  "WA",
 				Title: "Wrong Answer",
 			}, nil
@@ -69,7 +70,7 @@ func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error
 		helpers.InfoLogger.Printf("RunTests: %t ", isRight)
 	}
 
-	return &models.Verdict{Abbr: "OK", Title: "All test passed"}, nil
+	return &models.Verdict{ID: 1, Abbr: "OK", Title: "All test passed"}, nil
 }
 
 func (s *CheckSystem) check(codeResult string, output string) bool {
