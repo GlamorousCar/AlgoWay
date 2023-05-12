@@ -3,8 +3,14 @@
 .practice-block{
   display: flex;
   width: 100%;
+  min-height: 50vh;
   .information-block{
     width:50%;
+    background-color: $header-footer-color;
+    min-height: 50vh;
+    margin-right: 20px;
+    border-radius: 24px;
+    padding: 40px;
     .task-select {
       display: flex;
       flex-direction: column;
@@ -12,35 +18,67 @@
       margin-bottom: 20px;
     }
 
+    .task-content{
+      height: auto;
+    }
     label {
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 5px;
     }
+    .select-block{
+      display: flex;
+      select {
+        font-size: 20px;
+        font-weight: 700;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        margin-right: 10px;
+      }
+      select:focus {
+        outline: none;
+        box-shadow: 0 2px 5px $light-green-color;
+      }
 
-    select {
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-      width: 300px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      .task-difficulty{
+        padding:10px;
+        border-radius: 5px;
+        .task-difficulty-item::before{
+          margin-right: 0;
+        }
+      }
+      .task-difficulty.easy{
+        background-color: $easy-light-green-color;
+        color: $easy-green-color;
+      }
     }
-
-    select:focus {
-      outline: none;
-      border-color: #6ea4f6;
-      box-shadow: 0 2px 5px rgba(110, 164, 246, 0.5);
+    .visual-info-block{
+      display: flex;
+      width:100%;
+      justify-content: space-between;
+      &-item{
+        background-color: #323538;
+        width: 100%;
+        margin-right: 10px;
+        border-radius: 16px;
+        padding:20px;
+    }
     }
   }
   .block-solve{
+    padding:20px;
+    z-index: 1;
     width:50%;
+    background-color: $header-footer-color;
+    border-radius: 24px;
+
     .code-block {
       position: relative;
       width: 100% ;
-      background-color: $no-active-color;
-      max-height: 300px;
+      background-color: $header-footer-color;
+      max-height: 70vh;
       overflow: auto;
       .line-numbers {
         position: absolute;
@@ -69,8 +107,33 @@
         resize: none;
         display: inline-block;
         vertical-align: top;
-        background-color: $no-active-color;
+        background-color: $header-footer-color;
+        color: $white-color-selected;
         line-height: 24px;
+      }
+    }
+    .send-solution-block{
+      display: flex;
+      justify-content:space-between;
+      .solution-result-block{
+        display: flex;
+
+        .solution-result-block-title {
+          font-size: 20px;
+        }
+      }
+      .send-solution{
+        background-color: $main-green-color;
+        text-decoration: none;
+        color: $white-color-selected;
+        padding: 5px 20px;
+        gap: 8px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 10px;
+        border:none;
+        height: 50px;
       }
     }
   }
