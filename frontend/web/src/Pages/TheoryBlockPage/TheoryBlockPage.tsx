@@ -37,7 +37,7 @@ const TheoryBlockPage = () => {
     return (
         <div className={"algorithm"}>
             <div className="container">
-                 <h3 className={"algorithm-title"}>{loading ?  <Skeleton width={210} sx={{bgcolor: '#272A2D',}}/>:algorithm?.title}</h3>
+                <h3 className={"algorithm-title"}>{loading ?  <Skeleton width={210} sx={{bgcolor: '#272A2D',}}/>:algorithm?.title}</h3>
 
                 <nav className={"nav-switch"}>
                     <NavLink to={"theory"} style={{textDecoration:"none"}} end>

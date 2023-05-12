@@ -23,15 +23,16 @@ function App() {
 
 
     useEffect(() => {
-
         getResources();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getResources = () => {
         dispatch(menuLoading());
-        getMenuTopics().then(onMenuLoaded).catch(getResources);
+        getMenuTopics().then(onMenuLoaded).catch(()=>{
+            setTimeout(getResources, 10000);
+
+        });
     }
 
     const onMenuLoaded = (menuList: IMenu[]) => {

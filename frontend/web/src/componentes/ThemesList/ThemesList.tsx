@@ -35,7 +35,7 @@ const ThemesList = () => {
                                                     <li className={'second-layer-list-item'}
                                                         key={algorithm.algorithm_id}>
                                                         <NavLink
-                                                            to={`/topics/${menuItem.theme_id}/${algorithm.algorithm_id}/theory`}
+                                                            to={`/topics/${menuItem.theme_id}/${algorithm.algorithm_id}`}
                                                             className={"theme-list-item"}>
                                                             {algorithm.title}
                                                         </NavLink>
@@ -54,25 +54,3 @@ const ThemesList = () => {
 };
 
 export default ThemesList;
-
-// return(
-//     <>
-//         <ul className={'second-layer-list'}>
-//             {
-//                 menuItem.algorithms.map(algorithm => {
-//                     return (
-//                         <>
-//                             <li className={'second-layer-list-item'}
-//                                 key={algorithm.algorithm_id}>
-//                                 <NavLink
-//                                     to={`/topics/${algorithm.algorithm_id}/theory`}
-//                                     className={"theme-list-item"}>
-//                                     {algorithm.title}
-//                                 </NavLink>
-//                             </li>
-//                         </>
-//                     )
-//                 })}
-//         </ul>
-//     </>
-// );
