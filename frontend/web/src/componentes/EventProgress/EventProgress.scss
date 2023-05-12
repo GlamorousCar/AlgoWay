@@ -6,7 +6,7 @@
   text-align: center;
   justify-content: center;
   margin-top: 30px;
-  margin-right: 83px;
+  margin-right: 40px;
 
   .progress{
     display: flex;
@@ -26,5 +26,9 @@
     font-weight: 400;
     font-size: 20px;
     line-height: 20px;
+    width:104px ;
+    text-align:left;
+    margin-top: 0;
+    margin-left: 10px;
   }
 }

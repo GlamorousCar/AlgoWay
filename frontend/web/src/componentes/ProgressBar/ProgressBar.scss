@@ -1,18 +1,43 @@
 @import "../App/App";
+.progress-container-box{
+  position: relative;
 
-.progress-container{
-  width: 90%;
-  margin-top: 130px;
-  margin-bottom: 100px;
-  height: 120px;
-  background: $white-color-selected;
-  color: $dark-grey-color;
-  border-radius: 16px;
-  padding:30px;
- .progress-title{
-    margin:0;
+  .progress-container{
+    min-width: 90%;
+    margin-top: 130px;
+    margin-bottom: 100px;
+    height: 120px;
+    background: $white-color-selected;
+    color: $dark-grey-color;
+    border-radius: 16px;
+    padding:30px;
+    .progress-title{
+      margin:0;
+    }
+    .progress-events{
+      display: flex;
+    }
   }
-  .progress-events{
-    display: flex;
+
+  .progress-container-blur{
+    background-color: rgba(0, 0, 0, 0.9);
+    filter: blur(6px);
+    pointer-events: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+
+  }
+  .hidden-block{
+    color: $dark-grey-color;
+    position: absolute;
+    top:0;
+    right: 0;
+    width: 300px;
+    padding: 20px;
+    font-size:16px;
   }
 }

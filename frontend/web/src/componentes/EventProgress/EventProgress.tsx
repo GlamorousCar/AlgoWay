@@ -18,7 +18,7 @@ const EventProgress:FC<EventProps>= ({total, done, description}) => {
                 <h4 className={"total-event"}>{total}</h4>
             </div>
             <div className="progress-description">
-                <p>{description}</p>
+                <p className="progress-description">{description}</p>
             </div>
 
         </div>
