@@ -1,15 +1,17 @@
 import * as React from "react"
 import './Button.scss'
-import {ReactNode} from "react";
 
 interface ButtonProps{
     text:string,
+    onClick?:()=>void;
 }
 
 const Button = (props:ButtonProps)=>{
+
+
     return(
         <>
-            <button>
+            <button onClick={props.onClick}>
                 {props.text}
             </button>
 
