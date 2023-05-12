@@ -3,22 +3,40 @@ import "./PracticeBlock.scss"
 import {useParams} from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
 import {ITask} from "../../types/types";
+import {Editor, Monaco} from "@monaco-editor/react";
+import UseAuthService from "../../services/UseAuthService";
+
 
 const PracticeBlock = () => {
 
-    const [solution, setSolution] = useState<string>();
+    const [solution, setSolution] = useState<string >("// some comment");
     const [selectedTask, setSelectedTask] = useState<number>(1);
+    const [selectedLanguage, setSelectedLanguage] = useState<string>("javascript");
     const [tasks, setTasks] = useState<ITask[]>([]);
     const {algorithmId} = useParams();
 
 
     const {getAlgorithmTasks} = useAlgoService();
-
+    const {checkTask} = UseAuthService();
 
     useEffect(() => {
         getResources(Number(algorithmId));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
+
+
+    const handleEditorDidMount = (monaco: Monaco) => {
+        monaco.editor.defineTheme('my-theme', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [],
+            colors: {
+                'editor.background': '#272A2D',
+            },
+        });
+        monaco.editor.setTheme("my-theme");
+    }
+
 
     const getResources = (algorithmId: number) => {
         getAlgorithmTasks(algorithmId)
@@ -32,24 +50,32 @@ const PracticeBlock = () => {
     }
 
 
-    function handleChange(value: string) {
+    function handleEditorChange(value: string ) {
         console.log(value)
-
         setSolution(value);
     }
 
-    function getLineNumbers() {
-        const lineCount = solution?.split(/\r\n|\r|\n/).length;
-        return Array.from(Array(lineCount), (_, i) => i + 1).join('\n');
-    }
-
-    const rows = solution ? solution.split(/\r\n|\r|\n/).length + 1 : 2;
+    // function getLineNumbers() {
+    //     const lineCount = solution?.split(/\r\n|\r|\n/).length;
+    //     return Array.from(Array(lineCount), (_, i) => i + 1).join('\n');
+    // }
+    //
+    // const rows = solution ? solution.split(/\r\n|\r|\n/).length + 1 : 2;
 
     function handleTaskSelect(event: any) {
-        console.log(event.target.value)
         setSelectedTask(event.target.value);
     }
 
+    function handleLanguageSelect(event: any) {
+        console.log(event.target.value)
+        setSelectedLanguage(event.target.value);
+    }
+
+    const sendSolutionHandler = (e: any) => {
+        e.preventDefault();
+        checkTask(localStorage.getItem("token"),selectedLanguage, selectedTask, solution)
+            .then(response =>console.log(response))
+    }
     return (
         <div className='practice-block'>
             <div className="information-block">
@@ -86,9 +112,12 @@ const PracticeBlock = () => {
                             </p>
                             <h2 className={"output-info-title"}>Формат вsвода</h2>
                             <p className={"output-info-content"}>
-                                Первая строка выходных данных содержит максимальную возможную сумму, вторая — маршрут, на
-                                котором достигается эта сумма. Маршрут выводится в виде последовательности, которая должна
-                                содержать N-1 букву D, означающую передвижение вниз и M–1 букву R, означающую передвижение
+                                Первая строка выходных данных содержит максимальную возможную сумму, вторая — маршрут,
+                                на
+                                котором достигается эта сумма. Маршрут выводится в виде последовательности, которая
+                                должна
+                                содержать N-1 букву D, означающую передвижение вниз и M–1 букву R, означающую
+                                передвижение
                                 направо.
                                 Если таких последовательностей несколько, необходимо вывести ровно одну (любую) из них.
                             </p>
@@ -124,24 +153,68 @@ const PracticeBlock = () => {
                     :
                     null}
             </div>
-            <div className="block-solve">
-                <div className="code-block">
-                    <div className="line-numbers">{getLineNumbers()}</div>
-                    <textarea
-                        value={solution} onChange={(e) => handleChange(e.target.value)}
-                        className="code-input"
-                        rows={rows}
-                        cols={13}/>
-                </div>
-                <div className="send-solution-block">
-                    <div className="solution-result-block">
-                        <p className="solution-result-block-title"> Результаты проверки </p>
+            <div className="solve">
+                <div className="block-solve-code">
+                    <select
+                        className={"select language-select"}
+                        id="language-select"
+                        value={selectedLanguage}
+                        onChange={(event) => handleLanguageSelect(event)}
+                    >
+                        <option value={"go"}>Go</option>
+                        <option value={"javascript"}>JavaScript</option>
+                        <option value={"python"}>Python</option>
+                    </select>
+                    <Editor
+                        height="50vh"
+                        width={"100%"}
+                        value={solution}
+                        language={selectedLanguage}
+                        defaultValue="// some comment"
+                        onChange={()=>handleEditorChange}
+                        theme={"my-theme"}
+                        beforeMount={handleEditorDidMount}
+                    />
+                    <div className="send-solution-block">
+                        <div className="solution-result-block">
+                            <p className="solution-result-block-title"> Результаты проверки </p>
 
+                        </div>
+                        <button onClick={(e) => sendSolutionHandler(e)} className="send-solution">
+                            Отправить
+                        </button>
                     </div>
-                    <button className="send-solution">
-                        Отправить
-                    </button>
+                    <div className="visual-info-block">
+                        <div className="visual-info-block-item">
+                            <h2 className="visual-info-block-item-title">
+                                Вывод
+                            </h2>
+                            <p>
+                                Результат
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
+                <div className="solution-results">
+                    <div className="title-table-row table-row">
+                        <div className="title-table-cell table-cell"><span>Дата и время</span></div>
+                        <div className="title-table-cell table-cell"><span>Вердикт</span></div>
+                    </div>
+                    <div className=" table-row table-row-result">
+                        <div className="table-cell"><span>12 апр 2023, 22:36</span></div>
+                        <div className="table-cell verdict-ok"><span>OK</span></div>
+                    </div>
+                    <div className="table-row table-row-result">
+                        <div className="table-cell"><span>12 апр 2023, 22:36</span></div>
+                        <div className="table-cell verdict-error"><span>WA</span></div>
+                    </div>
+                    <div className="table-row table-row-result">
+                        <div className="table-cell"><span>12 апр 2023, 22:36</span></div>
+                        <div className="table-cell verdict-error"><span>WA</span></div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
