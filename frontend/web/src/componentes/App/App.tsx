@@ -23,14 +23,14 @@ function App() {
 
 
     useEffect(() => {
-        getResources();
+        getMenus();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const getResources = () => {
+    const getMenus = () => {
         dispatch(menuLoading());
         getMenuTopics().then(onMenuLoaded).catch(()=>{
-            setTimeout(getResources, 10000);
+            setTimeout(getMenus, 10000);
 
         });
     }
@@ -39,7 +39,7 @@ function App() {
         console.log("получение данных ")
         console.log(menuList)
         if(menuList.length === 0){
-            getResources();
+            setTimeout(getMenus, 10000);
         }else{
             dispatch(menuLoaded());
             dispatch(setMenuItems(menuList));
