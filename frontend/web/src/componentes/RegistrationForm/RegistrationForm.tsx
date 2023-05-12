@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Google from "../../images/GoogleLogo.svg";
 import GitHub from "../../images/GitHub.svg";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import './RegistrationForm.scss'
 import UseAuthService from "../../services/UseAuthService";
 
@@ -10,6 +10,8 @@ const RegistrationForm = () => {
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const navigate = useNavigate();
 
     const {registration} = UseAuthService();
     return (
@@ -37,7 +39,10 @@ const RegistrationForm = () => {
                 <button className={"button"} onClick={ (event) => {
                     event.preventDefault()
                     registration(username, email, password)
-                        .then(response => console.log(response))
+                        .then(response => {
+                            console.log(response)
+                            navigate('/login');
+                        })
                         .catch(response=> console.log(response.response?.data, response));
                 }}>
                     Создать аккаунт

@@ -20,6 +20,34 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
+    const onClickHandler=(e:any)=>{
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        login(email, password)
+            .then(response => {
+                localStorage.setItem("token",response.token);
+                setLoading(false);
+                dispatch(setAuthTrue());
+                navigate('/');
+            })
+            .catch(response=> {
+                console.log(response)
+                setLoading(false);
+                if(response.response.status === 400){
+                    if (response.response.data === "no rows in result set\n"){
+                        setError('Введете данные для входа')
+                    }
+                    if (response.response.data === "crypto/bcrypt: hashedPassword is not the hash of the given password\n"){
+                        setError('Введены неверный логин или пароль')
+                    }
+                }else {
+                    setError('Ошибка сервера')
+                }
+
+            });
+    }
     const spinner = loading ? <LoadingSpinner/>:null;
     const errorMessage = error ? <span className={'login-error-message'}>{error}</span> :null;
     return (
@@ -40,32 +68,8 @@ const LoginForm = () => {
                            placeholder={"Password"}
                     />
                     <button className={"button"} onClick={ (e)=> {
-                        e.preventDefault();
-                        setError('');
-                        setLoading(true);
-                        login(email, password)
-                            .then(response => {
-                                localStorage.setItem("token",response.token);
-                                setLoading(false);
-                                dispatch(setAuthTrue());
-                                navigate('/');
-                            })
-                            .catch(response=> {
-                                console.log(response)
-                                setLoading(false);
-                                if(response.response.status === 400){
-                                    if (response.response.data === "no rows in result set\n"){
-                                        setError('Введете данные для входа')
-                                    }
-                                    if (response.response.data === "crypto/bcrypt: hashedPassword is not the hash of the given password\n"){
-                                        setError('Введены неверный логин или пароль')
-                                    }
-                                }else {
-                                    setError('Ошибка сервера')
-                                }
-
-                            });
-                    }} >Войти</button>
+                        onClickHandler(e)
+                    }}>Войти</button>
                     <div className="result-block">
                         {spinner}
                         {errorMessage}
