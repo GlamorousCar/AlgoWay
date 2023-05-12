@@ -2,9 +2,9 @@ import axios from "axios";
 import {useCallback} from "react";
 
 const UseHttpRequestHook = ( )=>{
-    const getRequest = useCallback(async (url:string, data:object) => {
+    const postRequest = useCallback(async (url:string, data:object, headers?:object) => {
         try {
-            const response = await axios.post(url, data);
+            const response = await axios.post(url, data, headers );
             if (response.statusText !== "OK") {
                 throw new Error(`Couldn't fetch ${url}, status : ${response.status} `)
             }
@@ -15,7 +15,7 @@ const UseHttpRequestHook = ( )=>{
     }, [])
 
 
-    return {getRequest}
+    return {postRequest}
 }
 
 export default UseHttpRequestHook;
