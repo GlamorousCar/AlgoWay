@@ -14,6 +14,9 @@ type CheckSystem struct {
 	config config
 }
 
+const verdictOKId = 1
+const verdictWAId = 2
+
 func NewCheckSystem(lang string) (*CheckSystem, error) {
 	config, err := newConfig(lang)
 	if err != nil {
@@ -62,7 +65,7 @@ func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error
 
 		if !isRight {
 			return &models.Verdict{
-				ID:    2,
+				ID:    verdictWAId,
 				Abbr:  "WA",
 				Title: "Wrong Answer",
 			}, nil
@@ -70,7 +73,7 @@ func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error
 		helpers.InfoLogger.Printf("RunTests: %t ", isRight)
 	}
 
-	return &models.Verdict{ID: 1, Abbr: "OK", Title: "All test passed"}, nil
+	return &models.Verdict{ID: verdictOKId, Abbr: "OK", Title: "All test passed"}, nil
 }
 
 func (s *CheckSystem) check(codeResult string, output string) bool {

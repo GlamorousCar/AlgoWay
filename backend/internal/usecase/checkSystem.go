@@ -18,7 +18,7 @@ func NewCheckSystemUseCase(checkSystemRepo repository.CheckSystemRepo) *CheckSys
 // CheckTask TODO userId сейчас не используется, он нужен будет в дальнейшем при сохранении вердикта
 func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string, userId int) (*models.Verdict, error) {
 	helpers.InfoLogger.Println("CheckSystemUseCase: CheckTask")
-	checkModule, err := checkSystem.NewCheckSystem(lang) // Переименовал, потому что переменная называлась так же как и модуль
+	checkModule, err := checkSystem.NewCheckSystem(lang)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string, 
 	err = u.checkSystemRepo.SaveAttempt(userId, taskID, verdict)
 
 	if err != nil {
-		helpers.ErrorLogger.Fatal(err)
+		helpers.ErrorLogger.Println(err)
 	}
 	return verdict, nil
 }
