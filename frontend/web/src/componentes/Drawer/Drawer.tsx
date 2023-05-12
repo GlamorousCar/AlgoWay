@@ -6,14 +6,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {drawerClosing} from "../../store/actions";
 import {IAppState} from "../../types/store";
 import ThemesList from "../ThemesList/ThemesList";
-import {Skeleton} from "@mui/material";
 import SkeletonList from "../skeletonList/SkeletonList";
 
 const Drawer = () => {
     const {drawerOpeningStatus, menuLoading } = useSelector((state: IAppState) => state);
     const dispatch = useDispatch();
 
-    const duration = 30000;
+    const duration = 0;
     const defaultStyles = {
         transition: `opacity ${duration}ms ease-in`,
         opacity: 0
@@ -26,12 +25,9 @@ const Drawer = () => {
         exited: {opacity: 0}
     };
 
-    function onEnterHandler() {
-        console.log("enter")
-    }
 
     return (
-        <Transition in={drawerOpeningStatus} timeout={duration} unmountOnExit onEnter={onEnterHandler}>
+        <Transition in={drawerOpeningStatus} timeout={duration} unmountOnExit >
             {state => (
                 <div className={'drawer'}
                      style={{...defaultStyles, ...transitionStyles[state as keyof typeof transitionStyles]}}>

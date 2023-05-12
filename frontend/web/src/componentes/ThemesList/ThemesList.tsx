@@ -16,6 +16,7 @@ const ThemesList = () => {
                             key={menuItem.theme_id}>
                             <NavLink
                                 to={`/topics/${menuItem.theme_id}`}
+                                key={menuItem.theme_id}
                                 className={"theme-list-item"}>
                                 {
                                     ({isActive}) => {
@@ -36,7 +37,8 @@ const ThemesList = () => {
                                                         key={algorithm.algorithm_id}>
                                                         <NavLink
                                                             to={`/topics/${menuItem.theme_id}/${algorithm.algorithm_id}`}
-                                                            className={"theme-list-item"}>
+                                                            className={"second-layer-list-item-link"}
+                                                            key={algorithm.algorithm_id}>
                                                             {algorithm.title}
                                                         </NavLink>
                                                     </li>

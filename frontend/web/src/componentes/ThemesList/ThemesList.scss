@@ -27,8 +27,9 @@
     text-decoration: none;
   }
   .second-layer-list{
+    padding-left: 20px;
     .second-layer-list-item{
-      list-style-type: disc;
+      list-style: none;
       color: $no-active-color;
       padding: 5px;
       margin: 8px 0;
@@ -38,8 +39,27 @@
         color:$main-green-color;
       }
       a{
+        text-decoration: none;
         color: $white-color-selected;
       }
+    }
+    .second-layer-list-item-link::before{
+      content: "»";
+      color: $no-active-color;
+      margin-right: 15px;
+    }
+    .second-layer-list-item-link.active::before{
+      content: "»";
+      color: $main-green-color;
+      margin-right: 15px;
+    }
+    .second-layer-list-item-link{
+      text-decoration: none;
+      color: $no-active-color;
+    }
+    .second-layer-list-item-link.active{
+      text-decoration: none;
+      color: $white-color-selected;
     }
   }
 

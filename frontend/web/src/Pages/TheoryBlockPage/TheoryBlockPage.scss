@@ -8,6 +8,7 @@
       font-weight: 700;
       font-size: 40px;
       line-height: 48px;
+      margin-top: 20px;
       margin-bottom: 10px;
     }
 
@@ -84,4 +85,10 @@
   .container::-webkit-scrollbar {
     width: 0;
   }
+}
+a{
+  text-decoration: none;
+}
+.disable{
+  pointer-events: none;
 }
