@@ -12,7 +12,7 @@ import (
 const defaultCapacity = 10
 
 type TaskRepository interface {
-	GetTasks(id int) (*[]models.Task, error)
+	GetTasks(id int, userId int) (*[]models.Task, error)
 }
 
 type taskRepositoryPostgres struct {
@@ -23,12 +23,15 @@ func NewTaskRepositoryPostgres(conn *pgx.Conn) *taskRepositoryPostgres {
 	return &taskRepositoryPostgres{conn: conn}
 }
 
-func (repo *taskRepositoryPostgres) GetTasks(id int) (*[]models.Task, error) {
-	query := `SELECT id, is_solved, title, content 
-			FROM task 
-			WHERE algorithm_id=$1`
+func (repo *taskRepositoryPostgres) GetTasks(id int, userId int) (*[]models.Task, error) {
+	query := `SELECT id, CASE
+    WHEN task.id in (select task_id from attempt join verdict v2 ON attempt.verdict_id = v2.id where user_id = $2 and v2.abbr = 'OK') THEN 'OK'
+    WHEN task.id in (select task_id from attempt join verdict v2 ON attempt.verdict_id = v2.id where user_id = $2 and v2.abbr = 'WA') THEN 'WA'
+    ELSE 'NotSolved'
+  	END is_solved ,title,content
+	from task WHERE algorithm_id=$1;`
 
-	rows, err := repo.conn.Query(context.Background(), query, id)
+	rows, err := repo.conn.Query(context.Background(), query, id, userId)
 
 	algoTasks := make([]models.Task, 0, defaultCapacity)
 	for rows.Next() {
