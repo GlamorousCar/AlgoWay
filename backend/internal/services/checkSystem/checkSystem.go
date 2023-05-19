@@ -45,18 +45,18 @@ func (s *CheckSystem) RunTests(testData models.TestData) (*models.Verdict, error
 		return nil, errors.New("len(testData.InputData) != len(testData.OutputData)")
 	}
 
-	cmd := s.config.getCMD()
-
 	testCnt := len(testData.InputData)
 	for i := 0; i < testCnt; i++ {
 		var stderr bytes.Buffer
 		var codeResult bytes.Buffer
 
+		cmd := s.config.getCMD()
 		cmd.Stdout = &codeResult
 		cmd.Stderr = &stderr
 		cmd.Stdin = strings.NewReader(testData.InputData[i])
 
 		err := cmd.Run()
+
 		if err != nil {
 			return nil, err
 		}
