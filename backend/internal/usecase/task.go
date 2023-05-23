@@ -13,6 +13,6 @@ func NewTaskUseCase(repo repository.TaskRepository) *TaskUseCase {
 	return &TaskUseCase{repo: repo}
 }
 
-func (u *TaskUseCase) GetTasks(id int) (*[]models.Task, error) {
-	return u.repo.GetTasks(id)
+func (u *TaskUseCase) GetTasks(id int, userId int) (*[]models.Task, error) {
+	return u.repo.GetTasks(id, userId)
 }

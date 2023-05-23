@@ -13,6 +13,7 @@ const algorithmId = "algo_id"
 
 type TaskHandler struct {
 	taskUseCase *usecase.TaskUseCase
+	userUseCase *usecase.UserUseCase
 }
 
 func NewTaskHandler(taskUseCase *usecase.TaskUseCase) *TaskHandler {
@@ -26,6 +27,7 @@ func NewTaskHandler(taskUseCase *usecase.TaskUseCase) *TaskHandler {
 //		@Tags			main
 //		@Accept			json
 //	    @Param        algo_id   query     string  3  "Получение задач по id алгоритма"
+//	    @Param        token   header     string  3  "Токен пользователя"
 //	    @Success		200	{array} models.Task "Возвращается список задач"
 //	    @Failure		500
 //		@Router			/task [get]
@@ -34,6 +36,10 @@ func (h *TaskHandler) GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) 
 		helpers.NotFound(w)
 		return
 	}
+	token := r.Header.Get("token")
+
+	userId, err := h.userUseCase.ValidateToken(token)
+
 	rawId := r.URL.Query().Get(algorithmId)
 	algoId, err := strconv.Atoi(rawId)
 	if err != nil || algoId < 1 {
@@ -41,7 +47,7 @@ func (h *TaskHandler) GetAlgorithmTasks(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	tasks, err := h.taskUseCase.GetTasks(algoId)
+	tasks, err := h.taskUseCase.GetTasks(algoId, userId)
 	if err != nil {
 		if errors.Is(err, helpers.ErrNoRecord) {
 			helpers.NotFound(w)

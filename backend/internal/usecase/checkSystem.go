@@ -18,7 +18,7 @@ func NewCheckSystemUseCase(checkSystemRepo repository.CheckSystemRepo) *CheckSys
 // CheckTask TODO userId сейчас не используется, он нужен будет в дальнейшем при сохранении вердикта
 func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string, userId int) (*models.Verdict, error) {
 	helpers.InfoLogger.Println("CheckSystemUseCase: CheckTask")
-	checkSystem, err := checkSystem.NewCheckSystem(lang)
+	checkModule, err := checkSystem.NewCheckSystem(lang)
 	if err != nil {
 		return nil, err
 	}
@@ -30,22 +30,30 @@ func (u *CheckSystemUseCase) CheckTask(taskID uint64, lang string, code string, 
 	}
 
 	helpers.InfoLogger.Println("CheckSystemUseCase: Writing code to file")
-	codeFile, err := checkSystem.WriteCodeToFile(code)
+	codeFile, err := checkModule.WriteCodeToFile(code)
 	if err != nil {
 		return nil, err
 	}
 
 	helpers.InfoLogger.Println("CheckTask: Running Tests")
-	// TODO сделать сохранение результата в БД
+
 	// TODO Сделать обработку ошибок WA (Wrong Answer), CE (Compilation Error), TL (Time Limit) и мб PE (Presentatiom Error)
-	verdict, err := checkSystem.RunTests(*testData)
+	verdict, err := checkModule.RunTests(*testData)
 	if err != nil {
 		return nil, err
 	}
 
 	err = codeFile.Close()
+
 	if err != nil {
 		panic(err)
+	}
+
+	// TODO сделать сохранение результата в БД
+	err = u.checkSystemRepo.SaveAttempt(userId, taskID, verdict)
+
+	if err != nil {
+		helpers.ErrorLogger.Println(err)
 	}
 	return verdict, nil
 }

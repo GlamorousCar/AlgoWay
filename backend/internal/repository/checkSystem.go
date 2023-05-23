@@ -8,6 +8,7 @@ import (
 
 type CheckSystemRepo interface {
 	GetTestData(taskID uint64) (*models.TestData, error)
+	SaveAttempt(userId int, taskID uint64, verdict *models.Verdict) error
 }
 
 type checkSystemRepoPostgres struct {
@@ -43,4 +44,17 @@ func (repo *checkSystemRepoPostgres) GetTestData(taskID uint64) (*models.TestDat
 	}
 
 	return &models.TestData{InputData: inputData, OutputData: outputData}, nil
+}
+
+func (repo *checkSystemRepoPostgres) SaveAttempt(userId int, taskID uint64, verdict *models.Verdict) error {
+	query := `INSERT INTO attempt (user_id, task_id, verdict_id) 
+		 VALUES($1,$2,$3)`
+
+	_, err := repo.conn.Exec(context.Background(), query, userId, taskID, verdict.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
