@@ -5,7 +5,7 @@ const UseAlgoService = () => {
 
     const {getRequest, error, clearError} = useFetchHook();
 
-    const _baseUrl = "https://bbaunqpcv1t23s9skmhv.containers.yandexcloud.net";
+    const _baseUrl = "https://bba2ku7v26adaqseufur.containers.yandexcloud.net";
 
     const getMenuTopics = async () =>{
         const res = await getRequest(`${_baseUrl}/themes/menu`);

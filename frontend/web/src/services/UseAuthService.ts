@@ -3,7 +3,7 @@ import UseHttpRequestHook from "../Hooks/http.requests";
 const UseAuthService = () => {
 
     const {postRequest} = UseHttpRequestHook();
-    const _baseUrl = "https://bbaunqpcv1t23s9skmhv.containers.yandexcloud.net";
+    const _baseUrl = "https://bba2ku7v26adaqseufur.containers.yandexcloud.net";
 
     const login = async (email: string, password: string) => {
         try {
