@@ -4,7 +4,7 @@ import green_book from "../../images/Vector_book_green.svg";
 import default_book from "../../images/Vector_book_default.svg";
 import default_code from "../../images/Vector_code_default.svg"
 import green_code from "../../images/Vector_code_green.svg"
-import {NavLink, Outlet, useParams} from "react-router-dom";
+import {NavLink, Outlet, useNavigate, useParams} from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
 import {IAlgorithm} from "../../types/types";
 import { useEffect, useState} from "react";
@@ -22,10 +22,12 @@ const TheoryBlockPage = () => {
 
     const {isAuth} = useSelector((state: IAppState) => state)
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         getResources(Number(algorithmId));
         setLoading(true);
+        // navigate('/theory');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
 

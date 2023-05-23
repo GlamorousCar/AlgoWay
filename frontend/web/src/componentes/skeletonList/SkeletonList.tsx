@@ -5,7 +5,7 @@ const SkeletonList = () => {
     return (
         <div className={"skeleton-block"}>
             {Array.from({ length: 9 }).map((item, index) => (
-                <Skeleton height={35} width={"150px"} sx={{mt:"2px"}} key={index} animation="wave" />
+                <Skeleton height={35} width={"200px"} sx={{mt:"2px"}} key={index} animation="wave" />
             ))}
         </div>
     );

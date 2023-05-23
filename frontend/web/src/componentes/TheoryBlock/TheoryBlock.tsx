@@ -67,11 +67,12 @@ const TheoryBlock = () => {
 
     const onAlgorithmLoaded = (algorithm: IAlgorithm) => {
         setAlgorithm(algorithm);
-        console.log(algorithm.content)
+        console.log(algorithm.content);
+
     }
 
-    let dirty = marked(test_markdown);
 
+    let dirty = marked(test_markdown);
     console.log(dirty)
     const clean = sanitizeHtml(dirty, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ], ['blockquote']),
