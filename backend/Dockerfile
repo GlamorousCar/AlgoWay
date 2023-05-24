@@ -22,7 +22,7 @@ RUN go build -o app /app/cmd/web
 # Set the entry point of the container to the web binary
 
 
-FROM alpine:latest
+FROM golang:1.20-alpine as gobuild
 
 ARG DBUSER
 ARG DBNAME
