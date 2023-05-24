@@ -33,7 +33,9 @@ ARG SECRET_KEY
 
 WORKDIR /app
 COPY --from=gobuild /app .
+COPY --from=gobuild /usr/local/go/ /usr/local/go/
 
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 RUN touch .env
 RUN echo dbuser=$DBUSER > .env
