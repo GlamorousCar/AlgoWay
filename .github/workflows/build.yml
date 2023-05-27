@@ -32,7 +32,7 @@ jobs:
         yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
     - name: Build, tag, and push image to Yandex Cloud Container Registry
       run: |
-        docker build --platform=linux/amd64 --pull --rm -f "Dockerfile" --build-arg DBUSER=$DBUSER --build-arg DBNAME=$DBNAME --build-arg HOST=$HOST --build-arg DBPORT=$DBPORT --build-arg DBPASS=$DBPASS --build-arg SECRET_KEY=$SECRET_KEY -t app:latest "." 
+        docker build . --platform=linux/amd64 --pull --rm --build-arg DBUSER=$DBUSER --build-arg DBNAME=$DBNAME --build-arg HOST=$HOST --build-arg DBPORT=$DBPORT --build-arg DBPASS=$DBPASS --build-arg SECRET_KEY=$SECRET_KEY -t app:latest 
         docker tag app cr.yandex/$CR_REGISTRY/app:latest
         docker push cr.yandex/$CR_REGISTRY/app:latest
 
