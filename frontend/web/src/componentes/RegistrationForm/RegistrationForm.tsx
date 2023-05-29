@@ -54,8 +54,7 @@ const RegistrationForm = () => {
                     <img src={GitHub} alt=""/>
                 </div>
                 <div className="alternative">
-                    <p>Уже есть аккаунта? <NavLink to={'/login'} className="selected">Войти</NavLink></p>
-
+                    <span>Уже есть аккаунта? <NavLink to={'/login'} className="selected">Войти</NavLink></span>
                 </div>
             </div>
 
