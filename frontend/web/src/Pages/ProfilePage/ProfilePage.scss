@@ -1,0 +1,72 @@
+@import "../../componentes/App/App";
+
+.profile{
+  display:flex;
+  padding: 20px 30px 20px 50px;
+  width: 100%;
+  height: 100vh;
+
+  .main-profile-photo{
+    width: 250px ;
+    height: 250px;
+  }
+  .profile-username{
+    margin: 16px 0;
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 30px;
+  }
+  .edit-profile-button{
+    justify-content: center;
+    width: 260px;
+    height: 44px;
+    text-align: center;
+
+    background: $header-footer-color;
+
+    border: 1px solid $no-active-color;
+    border-radius: 6px;
+
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: $white-color-selected;
+    margin-bottom: 16px;
+  }
+
+  .location-block{
+    display: flex;
+    font-size: 13px;
+    .location-image{
+      margin-right: 10px;
+      height: 16px;
+    }
+  }
+  .github-link-block{
+    display: flex;
+    font-size: 13px;
+    .github-image-profile{
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+    }
+    .github-link{
+      text-decoration-line: underline;
+    }
+
+  }
+
+  .profile-activity{
+    margin-left: 40px;
+    .profile-title{
+      font-weight: 600;
+      font-size:21px;
+    }
+  }
+
+  .input-popup-form::after{
+    border:2px solid $main-green-color;
+  }
+}
