@@ -1,7 +1,7 @@
 @import "../App/App";
 
 .login-form{
-  display: flex;
+  display:flex;
   flex-direction: column;
   label{
     font-weight: 400;
@@ -40,11 +40,10 @@
 .alternative-block{
   justify-content: center;
   align-items: center;
-  .other-choices{
+  .other-choice{
     display: flex;
     align-items: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    padding: 0 0 20px 0;
 
     justify-content: center;
     img{
