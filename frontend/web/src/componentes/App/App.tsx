@@ -14,6 +14,7 @@ import {useDispatch} from "react-redux";
 import {menuLoaded, menuLoading, setMenuItems} from "../../store/actions";
 import LoginForm from "../LoginForm/LoginForm";
 import RegistrationForm from "../RegistrationForm/RegistrationForm";
+import ProfilePage from "../../Pages/ProfilePage/ProfilePage";
 
 
 
@@ -60,6 +61,7 @@ function App() {
                             <Route index path={'theory'} element={<TheoryBlock/>}/>
                             <Route path={'practice'} element={<PracticeBlock/>}/>
                         </Route>
+                        <Route path={"/profile"} element={<ProfilePage/>}/>
                         <Route path={"/"} element={<MainContentPage/>}/>
                     </Route>
                 </Routes>
