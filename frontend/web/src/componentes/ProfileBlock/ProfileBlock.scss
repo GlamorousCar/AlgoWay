@@ -1,5 +1,9 @@
 @import '../App/App';
 
+.profile-link{
+  text-decoration: none;
+  color: $white-color-selected;
+}
 .profile-block {
   .content {
     display: flex;
