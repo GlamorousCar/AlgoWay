@@ -1,0 +1,96 @@
+@import "../App/App";
+
+.activity-block{
+  border: 1px solid $no-active-color;
+  border-radius: 16px;
+  height: 200px;
+  margin-bottom: 40px;
+  margin-top: 20px;
+
+  .month-row{
+    display: flex;
+    justify-content: space-between;
+    margin-right: 30px;
+    .month-header:first-child{
+      margin-left: 47px;
+    }
+    .month-header{
+      font-weight: 500;
+      font-size: 10px;
+      color: $no-active-color;
+    }
+  }
+  .second-block{
+    display: flex;
+    .week-header{
+      font-weight: 500;
+      font-size: 10px;
+      color: $no-active-color;
+      margin: 0 10px 0 18px ;
+      line-height: 20.1px;
+    }
+    .activity-week:last-child{
+      margin-right: 10px;
+    }
+    .activity-blocks{
+      display: flex;
+      .activity-week-day{
+        width: 11px;
+        height: 11px;
+        background: $white-color-selected;
+        border-radius: 2px;
+        margin:9px 2px;
+      }
+
+    }
+
+  }
+  .color-description{
+    display: flex;
+    float: right;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 19px;
+    align-items: center;
+    margin-right: 20px;
+  }
+  .activity-week-day:first-child{
+    margin-top: 5px;
+  }
+  .activity-week-day.zero-solution{
+    width: 11px;
+    height: 11px;
+    margin-right: 5px;
+    margin-left: 5px;
+    background: $white-color-selected;
+    border-radius: 2px;
+  }
+  .activity-week-day.two-solution{
+    background: $easy-light-green-color;
+    width: 11px;
+    height: 11px;
+    margin-right: 5px;
+    border-radius: 2px;
+  }
+  .activity-week-day.four-solution{
+    width: 11px;
+    height: 11px;
+    margin-right: 5px;
+    background: $easy-green-color;
+    border-radius: 2px;
+  }
+  .activity-week-day.six-solution{
+    width: 11px;
+    height: 11px;
+    margin-right: 5px;
+    background: $light-green-color;
+    border-radius: 2px;
+  }
+  .activity-week-day.eight-solution{
+    width: 11px;
+    height: 11px;
+    margin-right: 5px;
+    background: $main-green-color;
+    border-radius: 2px;
+  }
+}
