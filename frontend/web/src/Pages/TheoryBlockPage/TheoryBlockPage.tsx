@@ -4,14 +4,13 @@ import green_book from "../../images/Vector_book_green.svg";
 import default_book from "../../images/Vector_book_default.svg";
 import default_code from "../../images/Vector_code_default.svg"
 import green_code from "../../images/Vector_code_green.svg"
-import {NavLink, Outlet, useNavigate, useParams} from "react-router-dom";
+import {NavLink, Outlet, useParams} from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
 import {IAlgorithm} from "../../types/types";
 import { useEffect, useState} from "react";
-import {Skeleton} from "@mui/material";
+import {Popover, Skeleton, Typography} from "@mui/material";
 import {useSelector} from "react-redux";
 import {IAppState} from "../../types/store";
-import {CSSProperties} from "@mui/material/styles/createMixins";
 
 const TheoryBlockPage = () => {
     const {algorithmId} = useParams();
@@ -22,12 +21,10 @@ const TheoryBlockPage = () => {
 
     const {isAuth} = useSelector((state: IAppState) => state)
 
-    const navigate = useNavigate();
 
     useEffect(() => {
         getResources(Number(algorithmId));
         setLoading(true);
-        // navigate('/theory');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [algorithmId]);
 
@@ -42,7 +39,24 @@ const TheoryBlockPage = () => {
         setLoading(false)
     }
 
-    const disableStyle = !isAuth ? "disable" :'';
+
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event:any) => {
+        if(!isAuth){
+            event.preventDefault();
+            setAnchorEl(event.currentTarget);
+        }
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
     return (
         <div className={"algorithm"}>
             <div className="container">
@@ -63,7 +77,7 @@ const TheoryBlockPage = () => {
                         }}
 
                     </NavLink>
-                    <NavLink to={"practice"} className={disableStyle}>
+                    <NavLink to={"practice"} aria-disabled={true}  onClick={(event)=>handleClick(event)} >
                         {({isActive, isPending}) => {
                             let className = isActive ? " active" : ""
                             return (
@@ -74,6 +88,18 @@ const TheoryBlockPage = () => {
                             )
                         }}
                     </NavLink>
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                    >
+                        <Typography sx={{ p: 2 }}>Данный функционал доступен только для авторизованного пользователя</Typography>
+                    </Popover>
                 </nav>
 
                 <div className="content">

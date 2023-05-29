@@ -16,7 +16,7 @@ const ContentBlock = ()=>{
             <div className={"main-content-page"}>
                 <Header/>
                 {drawerStatus?<Drawer />:<BurgerButton/>}
-                <div style={{paddingLeft:drawerStatus?"21%":'5%'}} className="main">
+                <div style={{paddingLeft:drawerStatus?"18%":'5%'}} className="main">
                     <Outlet/>
                 </div>
                 <Footer/>
