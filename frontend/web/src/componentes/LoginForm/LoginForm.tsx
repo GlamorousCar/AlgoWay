@@ -8,6 +8,7 @@ import spinner from "../Spinners/Spinner";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import {setAuthTrue} from "../../store/actions";
 import {useDispatch} from "react-redux";
+import {GoogleLogin} from "@react-oauth/google";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
@@ -20,6 +21,13 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
+    const responseMessage = (response:any) => {
+        console.log(response);
+    };
+    const errorGoogleMessage = () => {
+        console.log("error");
+    };
 
     const onClickHandler=(e:any)=>{
         e.preventDefault();
@@ -77,13 +85,13 @@ const LoginForm = () => {
 
                 </form>
                 <div className="alternative-block">
-                    <div className="other-choices">
+                    <div className="other-choice">
                         <img src={Google} alt=""/>
+                        <GoogleLogin onSuccess={responseMessage} onError={errorGoogleMessage} />
                         <img src={GitHub} alt=""/>
                     </div>
                     <div className="alternative">
                         <span>Еще нет аккаунта?   <NavLink to={'/registration'} className="selected">Зарегистрироваться</NavLink></span>
-
                     </div>
                 </div>
             </div>
