@@ -22,6 +22,9 @@
   }
   .second-block{
     display: flex;
+    .week-column{
+      margin-top: 5px;
+    }
     .week-header{
       font-weight: 500;
       font-size: 10px;
@@ -37,7 +40,6 @@
       .activity-week-day{
         width: 11px;
         height: 11px;
-        background: $white-color-selected;
         border-radius: 2px;
         margin:9px 2px;
       }
@@ -54,9 +56,7 @@
     align-items: center;
     margin-right: 20px;
   }
-  .activity-week-day:first-child{
-    margin-top: 5px;
-  }
+ 
   .activity-week-day.zero-solution{
     width: 11px;
     height: 11px;
@@ -92,5 +92,23 @@
     margin-right: 5px;
     background: $main-green-color;
     border-radius: 2px;
+  }
+
+  .activity-week-day.zero{
+    background: $white-color-selected;
+  }
+  .activity-week-day.two{
+    background: $easy-light-green-color;
+    
+  }
+  .activity-week-day.four{
+    background: $easy-green-color;
+  }
+  .activity-week-day.six{
+    background: $light-green-color;
+    
+  }
+  .activity-week-day.eight{
+    background: $main-green-color;
   }
 }
