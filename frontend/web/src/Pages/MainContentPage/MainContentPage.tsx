@@ -2,11 +2,13 @@ import * as React from "react"
 import './MainContentPage.scss'
 import MainImg from "../../images/main-page-img.png";
 import ProgressBar from "../../componentes/ProgressBar/ProgressBar";
+import { useNavigate } from "react-router-dom";
 
 
 
 const MainContentPage = () => {
 
+    const navigate = useNavigate();
     return (
         <div className={"main-page"}>
             <h2 className={"main-page-title"}>Онлайн-платформа для решения задач по программированию</h2>
@@ -26,7 +28,7 @@ const MainContentPage = () => {
                             </div>
                         </div>
                     </div>
-                    <button className={"main-content-button"}> Начать сейчас!</button>
+                    <button className={"main-content-button"} onClick={()=>navigate('/themeList')}> Начать сейчас!</button>
                 </div>
                 <img className={'main-image'} src={MainImg} alt={"main"}/>
             </div>

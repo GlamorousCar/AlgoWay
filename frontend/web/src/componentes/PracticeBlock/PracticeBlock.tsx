@@ -1,23 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import "./PracticeBlock.scss"
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAlgoService from "../../services/UseAlgoService";
-import {ITask} from "../../types/types";
-import {Editor, Monaco} from "@monaco-editor/react";
+import { ITask } from "../../types/types";
+import { Editor, Monaco } from "@monaco-editor/react";
 import UseAuthService from "../../services/UseAuthService";
+import LoadingSpinner from '../Spinners/LoadingSpinner';
 
 
 const PracticeBlock = () => {
 
-    const [solution, setSolution] = useState<string >("// some comment");
+    const [solution, setSolution] = useState<string>("// some comment");
     const [selectedTask, setSelectedTask] = useState<number>(1);
     const [selectedLanguage, setSelectedLanguage] = useState<string>("javascript");
     const [tasks, setTasks] = useState<ITask[]>([]);
-    const {algorithmId} = useParams();
+    const { algorithmId } = useParams();
+    const [error, setError] = useState<string>('')
+    const [loading, setLoading ] = useState<boolean>(false);
 
-
-    const {getAlgorithmTasks} = useAlgoService();
-    const {checkTask} = UseAuthService();
+    const { getAlgorithmTasks } = useAlgoService();
+    const { checkTask } = UseAuthService();
 
     useEffect(() => {
         getResources(Number(algorithmId));
@@ -50,7 +52,7 @@ const PracticeBlock = () => {
     }
 
 
-    function handleEditorChange(value: string ) {
+    function handleEditorChange(value: string) {
         console.log(value)
         setSolution(value);
     }
@@ -73,9 +75,19 @@ const PracticeBlock = () => {
 
     const sendSolutionHandler = (e: any) => {
         e.preventDefault();
-        checkTask(localStorage.getItem("token"),selectedLanguage, selectedTask, solution)
-            .then(response =>console.log(response))
+        setLoading(true);
+        checkTask(localStorage.getItem("token"), selectedLanguage, selectedTask, solution)
+            .then(response => {
+                console.log(response);
+                 setLoading(false);
+            }).catch((response)=>{
+                console.log(response)
+                setLoading(false)
+                setError(response.response?.data)
+            })
     }
+    const spinner = loading ? <LoadingSpinner/>:null;
+    const errorMessage = error ? <span className={'error-message'}>{error}</span> :null;
     return (
         <div className='practice-block'>
             <div className="information-block">
@@ -135,14 +147,14 @@ const PracticeBlock = () => {
                                         Вывод
                                     </h2>
                                     <p>
-                                        6 <br/>
-                                        4 <br/>
-                                        2 <br/>
-                                        1 <br/>
-                                        7 <br/>
-                                        5 <br/>
-                                        9 <br/>
-                                        8 <br/>
+                                        6 <br />
+                                        4 <br />
+                                        2 <br />
+                                        1 <br />
+                                        7 <br />
+                                        5 <br />
+                                        9 <br />
+                                        8 <br />
                                         3
                                     </p>
                                 </div>
@@ -171,7 +183,7 @@ const PracticeBlock = () => {
                         value={solution}
                         language={selectedLanguage}
                         defaultValue="// some comment"
-                        onChange={()=>handleEditorChange}
+                        onChange={(value) => handleEditorChange(value ?? '')}
                         theme={"my-theme"}
                         beforeMount={handleEditorDidMount}
                     />
@@ -183,6 +195,10 @@ const PracticeBlock = () => {
                         <button onClick={(e) => sendSolutionHandler(e)} className="send-solution">
                             Отправить
                         </button>
+                        <div className="result-handler">
+                            {spinner}
+                            {errorMessage}
+                        </div>
                     </div>
                     <div className="visual-info-block">
                         <div className="visual-info-block-item">

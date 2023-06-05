@@ -10,6 +10,9 @@ import Typography from '@mui/joy/Typography';
 import { FormControl, FormLabel, Stack} from "@mui/joy";
 import Button from "../../componentes/Button/Button";
 import {Input} from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setAuthFalse } from '../../store/actions';
 
 
 
@@ -17,12 +20,14 @@ import {Input} from "@mui/material";
 const ProfilePage = () => {
 
     const[open, setOpen] = useState<boolean>(false)
+    const dispatch = useDispatch();
     const modelHandler = (event:any)=>{
         event.preventDefault();
         setOpen(true);
 
     }
 
+    const navigate=useNavigate();
     return (
         <>
             <div className='profile'>
@@ -38,12 +43,18 @@ const ProfilePage = () => {
                         <img src={Github} alt="" className="github-image-profile"/>
                         <span className='github-link profile-info-text'>https://github.com/DToreY</span>
                     </div>
+                    <Button height='30px' text={"Выйти"} textSize='14px' onClick={()=>{
+                        localStorage.setItem('token', '')
+                        dispatch(setAuthFalse());
+                        navigate('/');
+                    }} />
                 </div>
                 <div className="profile-activity">
                     <span className={'profile-title'}>Активность за год</span>
                     <ActivityBlock/>
                     <ProgressBar/>
                 </div>
+               
             </div>
             {open?
                 <ModalSheet setOpen={setOpen} open={open}>
@@ -86,6 +97,7 @@ const ProfilePage = () => {
                     </form>
                 </ModalSheet>
                 :null}
+
         </>
 
     );

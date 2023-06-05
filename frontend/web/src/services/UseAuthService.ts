@@ -39,6 +39,7 @@ const UseAuthService = () => {
             }, {
                 headers: {
                     'user_token': token
+                    // 'Authorization': 'Bearer ' + token,
                 }
             })
         } catch (e) {
