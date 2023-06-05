@@ -8,7 +8,7 @@ import spinner from "../Spinners/Spinner";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import {setAuthTrue} from "../../store/actions";
 import {useDispatch} from "react-redux";
-import {GoogleLogin} from "@react-oauth/google";
+// import {GoogleLogin} from "@react-oauth/google";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
@@ -22,12 +22,12 @@ const LoginForm = () => {
     const navigate = useNavigate();
 
 
-    const responseMessage = (response:any) => {
-        console.log(response);
-    };
-    const errorGoogleMessage = () => {
-        console.log("error");
-    };
+    // const responseMessage = (response:any) => {
+    //     console.log(response);
+    // };
+    // const errorGoogleMessage = () => {
+    //     console.log("error");
+    // };
 
     const onClickHandler=(e:any)=>{
         e.preventDefault();
@@ -41,14 +41,23 @@ const LoginForm = () => {
                 navigate('/');
             })
             .catch(response=> {
-                console.log(response)
+                console.log(response);
                 setLoading(false);
-                if(response.response.status === 400){
+
+
+
+                if(response.response?.status === 400){
                     if (response.response.data === "no rows in result set\n"){
                         setError('Введете данные для входа')
                     }
                     if (response.response.data === "crypto/bcrypt: hashedPassword is not the hash of the given password\n"){
                         setError('Введены неверный логин или пароль')
+                    }
+                    if (response.response.data === "conn closed\n"){
+                        setError('Ошибка сервера. Попробуйте войти позже')
+                    }
+                    if (response.response.data === "write failed: write tcp 172.16.18.131:50428->158.160.66.146:6432: write: connection reset by peer\n"){
+                        setError('Ошибка сервера. Попробуйте войти позже')
                     }
                 }else {
                     setError('Ошибка сервера')
@@ -87,7 +96,7 @@ const LoginForm = () => {
                 <div className="alternative-block">
                     <div className="other-choice">
                         <img src={Google} alt=""/>
-                        <GoogleLogin onSuccess={responseMessage} onError={errorGoogleMessage} />
+                        {/* <GoogleLogin onSuccess={responseMessage} onError={errorGoogleMessage} /> */}
                         <img src={GitHub} alt=""/>
                     </div>
                     <div className="alternative">

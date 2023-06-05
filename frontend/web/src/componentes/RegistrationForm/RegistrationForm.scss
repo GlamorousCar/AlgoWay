@@ -30,7 +30,18 @@
     border: 0;
   }
 }
-
+.result-block{
+  display: flex;
+  padding-top: 20px;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  .login-error-message{
+    color:red;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
 .alternative-block {
   justify-content: center;
   align-items: center;
