@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {IAppState} from "../../types/store";
 import './ThemesList.scss'
+import { drawerClosing } from '../../store/actions';
 
 const ThemesList = () => {
     const {menu} = useSelector((state: IAppState) => state);
+    const dispatch = useDispatch();
     const [selectedAlgorithm, setSelectedAlgorithm] = useState<number>()
     return (
         <>
@@ -38,6 +40,7 @@ const ThemesList = () => {
                                                         <NavLink
                                                             to={`/topics/${menuItem.theme_id}/${algorithm.algorithm_id}`}
                                                             className={"second-layer-list-item-link"}
+                                                            onClick={()=>dispatch(drawerClosing())}
                                                             key={algorithm.algorithm_id}>
                                                             {algorithm.title}
                                                         </NavLink>
