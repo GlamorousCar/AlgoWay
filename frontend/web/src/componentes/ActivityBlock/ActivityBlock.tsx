@@ -1,7 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 import './ActivityBlock.scss'
-import {activityData} from './mockData'
+import { activityData } from './mockData'
+import Fade from '@mui/material/Fade';
+import { styled } from '@mui/material/styles';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
+
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: 'rgba(0, 0, 0, 0.87)',
+      boxShadow: theme.shadows[1],
+      fontSize: 11,
+    },
+  }));
 
 const ActivityBlock = () => {
     const months = ["Янв.", "Фев.", "Март", "Апр.", "Май", "Июнь", "Июль", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."];
@@ -10,11 +24,15 @@ const ActivityBlock = () => {
 
     const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
 
-    useEffect(()=>{
-        itemsRef.current = itemsRef.current.slice(0, activityData.map((item)=>item).length)
-    },[activityData])
+    useEffect(() => {
+        itemsRef.current = itemsRef.current.slice(0, activityData.map((item) => item).length)
+    }, [activityData])
 
-   let itemClasses = '';
+    const onFocusHandler = () => {
+
+    }
+
+    let itemClasses = '';
     return (
         <div className='activity-block'>
             <div className="month-row">
@@ -30,27 +48,36 @@ const ActivityBlock = () => {
                 </div>
                 <div className="activity-blocks">
                     {activityData.map((week, index) => {
-                        return(
+                        return (
                             <div className="activity-week" key={index}>
-                                {week.map((day , index) => {
-                                    if(day.contributions == 0 ){
+                                {week.map((day, index) => {
+                                    if (day.contributions == 0) {
                                         itemClasses = "activity-week-day zero";
-                                    }else if(day.contributions <=2 ){
+                                    } else if (day.contributions <= 2) {
                                         itemClasses = "activity-week-day two";
-                                    }else if(day.contributions <=4 ){
+                                    } else if (day.contributions <= 4) {
                                         itemClasses = "activity-week-day four";
-                                    }else if(day.contributions <=6 ){
+                                    } else if (day.contributions <= 6) {
                                         itemClasses = "activity-week-day six";
                                     }
-                                    else if(day.contributions >=7 ){
+                                    else if (day.contributions >= 7) {
                                         itemClasses = "activity-week-day eight";
                                     }
-                                    return <div 
-                                    className={itemClasses }
-                                    key={index}
-                                    ref={el => itemsRef.current[day.id] = el} 
-                                    >
-                                    </div>
+                                    return (
+                                        <LightTooltip
+                                            TransitionComponent={Fade}
+                                            TransitionProps={{ timeout: 600 }}
+                                            arrow={true}
+                                            title={`${day.contributions} решенных задач`}>
+                                            <div
+                                                className={itemClasses}
+                                                key={index}
+                                            // ref={el => itemsRef.current[day.id] = el} 
+                                            // onMouseEnter={onFocusHandler}
+                                            >
+                                            </div>
+                                        </LightTooltip>
+                                    )
                                 })}
                             </div>
                         )
